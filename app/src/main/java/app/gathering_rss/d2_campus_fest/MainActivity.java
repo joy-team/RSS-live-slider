@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, tempList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
+
         recyclerView.setAdapter(feedAdapter);
     }
 }
