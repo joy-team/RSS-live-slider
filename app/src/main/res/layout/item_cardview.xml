@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardBackgroundColor="@color/cardview_light_background"
         app:cardCornerRadius="10dp">
 
         <LinearLayout
@@ -52,7 +52,7 @@
                             android:id="@+id/tv_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Medium Text"
+                            android:text="2019.07.13"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textSize="16dp" />
 
@@ -60,7 +60,7 @@
                             android:id="@+id/tv_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="날짜"
+                            android:text="신사동 어딘가에서"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textSize="13dp" />
                     </LinearLayout>
@@ -84,8 +84,8 @@
                 <ImageView
                     android:id="@+id/iv_image"
                     android:layout_width="fill_parent"
-                    android:layout_height="500dp"
-                    app:srcCompat="?attr/actionModeShareDrawable" />
+                    android:layout_height="400dp"
+                    app:srcCompat="@drawable/conversation" />
             </RelativeLayout>
 
             <LinearLayout
@@ -105,7 +105,7 @@
                         android:id="@+id/tv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text" />
+                        android:text="다혜랑 케이크 먹었다" />
                 </RelativeLayout>
             </LinearLayout>
 
