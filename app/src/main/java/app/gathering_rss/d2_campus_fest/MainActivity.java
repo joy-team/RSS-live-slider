@@ -38,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
         CardviewAdapter cardviewAdapter = new CardviewAdapter(getSupportFragmentManager());
         viewPager.setAdapter(cardviewAdapter);
 
+        viewPager.setClipToPadding(false);
+        int dp_val = 10;
+        float d = getResources().getDisplayMetrics().density;
+        int margin = (int) (dp_val*d);
+        viewPager.setPadding(margin, 0, margin, 0);
+        viewPager.setPageMargin(margin/2);
+
         for(int i=0;i<4; i++){
             CardviewFragment cardviewFragment = new CardviewFragment();
             cardviewAdapter.addItem(cardviewFragment);
