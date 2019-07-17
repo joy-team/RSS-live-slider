@@ -15,8 +15,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.viewPager)
-    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,32 +22,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ArrayList<String> tempList = new ArrayList<>();
-        tempList.add("1");
-        tempList.add("2");
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        //recyclerview 임시 연결
-        FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, tempList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        recyclerView.setAdapter(feedAdapter);
-
-        //viewpager 임시 연결
-        CardviewAdapter cardviewAdapter = new CardviewAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(cardviewAdapter);
-
+/*
         viewPager.setClipToPadding(false);
         int dp_val = 10;
         float d = getResources().getDisplayMetrics().density;
         int margin = (int) (dp_val*d);
         viewPager.setPadding(margin, 0, margin, 0);
         viewPager.setPageMargin(margin/2);
+*/
+        ArrayList<CardviewAdapter> items = new ArrayList<>();
 
-        for(int i=0;i<4; i++){
-            CardviewFragment cardviewFragment = new CardviewFragment();
-            cardviewAdapter.addItem(cardviewFragment);
-        }
+        CardviewAdapter cardviewAdapter = new CardviewAdapter(getSupportFragmentManager());
+        items.add(cardviewAdapter);
 
-        cardviewAdapter.notifyDataSetChanged();
+        FeedAdapter feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), items);
+        recyclerView.setAdapter(feedAdapter);
     }
 }

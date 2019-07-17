@@ -8,45 +8,70 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     Context context;
-    ArrayList<String> feedList;
+    private ArrayList<CardviewAdapter> feedList;
+    private FragmentManager fragmentManager;
 
-    public FeedAdapter(Context context, ArrayList<String> feedList) {
+    HashMap<Integer, Integer> viewpagerState = new HashMap<>();
+
+    public FeedAdapter(Context context,FragmentManager fragmentManager, ArrayList<CardviewAdapter> feedList) {
         this.context = context;
         this.feedList = feedList;
+        this.fragmentManager = fragmentManager;
     }
 
-    @NonNull
     @Override
-    public FeedAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_temp,null);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feed, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.ViewHolder holder, int position) {
-        String text = feedList.get(position);
-        holder.textView.setText(text);
+        CardviewAdapter cardviewAdapter = feedList.get(position);
+
+        for(int i=0;i<4; i++){
+            CardviewFragment cardviewFragment = new CardviewFragment();
+            cardviewAdapter.addItem(cardviewFragment);
+        }
+
+        cardviewAdapter.notifyDataSetChanged();
+
+        holder.viewPager.setAdapter(cardviewAdapter);
+        holder.viewPager.setId(position+1);
+
+        if(viewpagerState.containsKey(position)){
+            holder.viewPager.setCurrentItem(viewpagerState.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return this.feedList.size();
+        return feedList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textView;
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        viewpagerState.put(holder.getAdapterPosition(),holder.viewPager.getCurrentItem());
+        super.onViewRecycled(holder);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        public ViewPager viewPager;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textView = itemView.findViewById(R.id.text1);
+            viewPager = itemView.findViewById(R.id.viewPager);
         }
     }
 }
