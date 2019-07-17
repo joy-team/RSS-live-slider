@@ -35,7 +35,7 @@ public class CardviewFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_cardview,container,false);
-
+        // TODO: 2019-07-17 cardview 안의 요소들 설정 
         return view;
     }
 }

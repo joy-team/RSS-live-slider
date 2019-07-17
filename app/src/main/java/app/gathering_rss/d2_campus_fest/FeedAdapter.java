@@ -66,6 +66,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
+        // TODO: 2019-07-17 bindview 사용 
+        // TODO: 2019-07-17 사용자 정보 입력할 요소들 추가 
         public ViewPager viewPager;
 
         public ViewHolder(@NonNull View itemView) {
