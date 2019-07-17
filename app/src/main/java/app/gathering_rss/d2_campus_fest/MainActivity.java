@@ -25,14 +25,6 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-/*
-        viewPager.setClipToPadding(false);
-        int dp_val = 10;
-        float d = getResources().getDisplayMetrics().density;
-        int margin = (int) (dp_val*d);
-        viewPager.setPadding(margin, 0, margin, 0);
-        viewPager.setPageMargin(margin/2);
-*/
         ArrayList<CardviewAdapter> items = new ArrayList<>();
 
         CardviewAdapter cardviewAdapter = new CardviewAdapter(getSupportFragmentManager());

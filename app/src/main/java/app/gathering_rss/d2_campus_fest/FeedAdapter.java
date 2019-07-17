@@ -71,7 +71,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            //set margin
             viewPager = itemView.findViewById(R.id.viewPager);
+            viewPager.setClipToPadding(false);
+            /*
+            int dp_val = 10;
+            float d = getResources().getDisplayMetrics().density;
+            int margin = (int) (dp_val*d);
+            */
+            int margin = 30;
+            viewPager.setPadding(margin, 0, margin, 0);
+            viewPager.setPageMargin(margin/2);
         }
     }
 }
