@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         CardviewAdapter cardviewAdapter = new CardviewAdapter(getSupportFragmentManager());
         items.add(cardviewAdapter);
+        CardviewAdapter cardviewAdapter1 = new CardviewAdapter(getSupportFragmentManager());
+        items.add(cardviewAdapter1);
+        CardviewAdapter cardviewAdapter2 = new CardviewAdapter(getSupportFragmentManager());
+        items.add(cardviewAdapter2);
 
         FeedAdapter feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), items);
         recyclerView.setAdapter(feedAdapter);
