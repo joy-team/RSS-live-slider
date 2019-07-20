@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,7 +40,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         ContentsAdapter contentsAdapter = feedList.get(position);
 
         for(int i=0;i<4; i++){
-            ContentsFragment contentsFragment = new ContentsFragment();
+            ContentsFragment contentsFragment = new ContentsFragment(context);
             contentsAdapter.addItem(contentsFragment);
         }
 
