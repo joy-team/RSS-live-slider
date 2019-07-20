@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             rss = response.body();
+            /*
             //    Test code
             Log.d("Callback", "" + rss.getTitle());
             Log.d("Callback", "" + rss.getLink());
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("Callback", "" + e);
             }
+            */
         }
 
         @Override
