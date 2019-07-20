@@ -1,29 +1,27 @@
 package app.gathering_rss.d2_campus_fest;
 
-import java.util.ArrayList;
+import com.tickaroo.tikxml.annotation.PropertyElement;
+import com.tickaroo.tikxml.annotation.Xml;
 
+@Xml
 public class Article {
-    private String title;
+
+    @PropertyElement
     private String link;
+
+    @PropertyElement
+    private String description;
+
+    @PropertyElement
     private String pubDate;
-    private ArrayList<String> contentUrls;
 
     public Article() {
     }
 
-    public Article(String title, String link, String pubDate, ArrayList<String> contentUrls) {
-        this.title = title;
+    public Article(String link, String description, String pubDate) {
         this.link = link;
+        this.description = description;
         this.pubDate = pubDate;
-        this.contentUrls = contentUrls;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getLink() {
@@ -34,19 +32,19 @@ public class Article {
         this.link = link;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getPubDate() {
         return pubDate;
     }
 
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
-    }
-
-    public ArrayList<String> getContentUrls() {
-        return contentUrls;
-    }
-
-    public void setContentUrls(ArrayList<String> contentUrls) {
-        this.contentUrls = contentUrls;
     }
 }
