@@ -6,10 +6,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-public class CardviewAdapter extends FragmentPagerAdapter {
-    private ArrayList<CardviewFragment> items = new ArrayList<>();
+public class ContentsAdapter extends FragmentPagerAdapter {
+    private ArrayList<ContentsFragment> items = new ArrayList<>();
 
-    public CardviewAdapter(FragmentManager fm) {
+    public ContentsAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -23,7 +23,7 @@ public class CardviewAdapter extends FragmentPagerAdapter {
         return items.size();
     }
 
-    void addItem(CardviewFragment fragment){
+    void addItem(ContentsFragment fragment){
         items.add(fragment);
     }
 }

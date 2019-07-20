@@ -9,15 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class CardviewFragment extends Fragment {
+public class ContentsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private int mParam1;
 
-    public CardviewFragment() {
+    public ContentsFragment() {
     }
 
-    public static CardviewFragment newInstance(int param1) {
-        CardviewFragment fragment = new CardviewFragment();
+    public static ContentsFragment newInstance(int param1) {
+        ContentsFragment fragment = new ContentsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, param1);
         fragment.setArguments(args);
@@ -34,7 +34,7 @@ public class CardviewFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_cardview,container,false);
+        View view = inflater.inflate(R.layout.item_contents,container,false);
         // TODO: 2019-07-17 cardview 안의 요소들 설정 
         return view;
     }

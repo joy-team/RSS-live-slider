@@ -1,11 +1,9 @@
 package app.gathering_rss.d2_campus_fest;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -17,12 +15,12 @@ import java.util.HashMap;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     Context context;
-    private ArrayList<CardviewAdapter> feedList;
+    private ArrayList<ContentsAdapter> feedList;
     private FragmentManager fragmentManager;
 
     HashMap<Integer, Integer> viewpagerState = new HashMap<>();
 
-    public FeedAdapter(Context context,FragmentManager fragmentManager, ArrayList<CardviewAdapter> feedList) {
+    public FeedAdapter(Context context,FragmentManager fragmentManager, ArrayList<ContentsAdapter> feedList) {
         this.context = context;
         this.feedList = feedList;
         this.fragmentManager = fragmentManager;
@@ -37,16 +35,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.ViewHolder holder, int position) {
-        CardviewAdapter cardviewAdapter = feedList.get(position);
+        ContentsAdapter contentsAdapter = feedList.get(position);
 
         for(int i=0;i<4; i++){
-            CardviewFragment cardviewFragment = new CardviewFragment();
-            cardviewAdapter.addItem(cardviewFragment);
+            ContentsFragment contentsFragment = new ContentsFragment();
+            contentsAdapter.addItem(contentsFragment);
         }
 
-        cardviewAdapter.notifyDataSetChanged();
+        contentsAdapter.notifyDataSetChanged();
 
-        holder.viewPager.setAdapter(cardviewAdapter);
+        holder.viewPager.setAdapter(contentsAdapter);
         holder.viewPager.setId(position+1);
 
         if(viewpagerState.containsKey(position)){

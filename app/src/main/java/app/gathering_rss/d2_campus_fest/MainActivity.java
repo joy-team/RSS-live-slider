@@ -3,7 +3,6 @@ package app.gathering_rss.d2_campus_fest;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 
@@ -25,14 +24,14 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<CardviewAdapter> items = new ArrayList<>();
+        ArrayList<ContentsAdapter> items = new ArrayList<>();
 
-        CardviewAdapter cardviewAdapter = new CardviewAdapter(getSupportFragmentManager());
-        items.add(cardviewAdapter);
-        CardviewAdapter cardviewAdapter1 = new CardviewAdapter(getSupportFragmentManager());
-        items.add(cardviewAdapter1);
-        CardviewAdapter cardviewAdapter2 = new CardviewAdapter(getSupportFragmentManager());
-        items.add(cardviewAdapter2);
+        ContentsAdapter contentsAdapter = new ContentsAdapter(getSupportFragmentManager());
+        items.add(contentsAdapter);
+        ContentsAdapter contentsAdapter1 = new ContentsAdapter(getSupportFragmentManager());
+        items.add(contentsAdapter1);
+        ContentsAdapter contentsAdapter2 = new ContentsAdapter(getSupportFragmentManager());
+        items.add(contentsAdapter2);
 
         FeedAdapter feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), items);
         recyclerView.setAdapter(feedAdapter);
