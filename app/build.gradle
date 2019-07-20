@@ -34,6 +34,8 @@ dependencies {
     implementation 'com.tickaroo.tikxml:retrofit-converter:0.8.13'
     implementation 'com.tickaroo.tikxml:annotation:0.8.13'
     implementation 'com.tickaroo.tikxml:core:0.8.13'
+    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.0.1'
     annotationProcessor 'com.tickaroo.tikxml:processor:0.8.13'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 }
