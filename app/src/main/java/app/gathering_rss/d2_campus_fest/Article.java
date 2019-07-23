@@ -1,10 +1,17 @@
 package app.gathering_rss.d2_campus_fest;
 
+import android.util.Log;
+
 import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
+import java.util.ArrayList;
+
 @Xml
 public class Article {
+
+    @PropertyElement
+    private String title;
 
     @PropertyElement
     private String link;
@@ -15,13 +22,50 @@ public class Article {
     @PropertyElement
     private String pubDate;
 
+    private ArrayList<String> imgUrl;
+
+    private ArrayList<String> vidUrl;
+
     public Article() {
     }
 
-    public Article(String link, String description, String pubDate) {
+    public Article(String title, String link, String description, String pubDate) {
+        this.title = title;
         this.link = link;
         this.description = description;
         this.pubDate = pubDate;
+        setUrls();
+    }
+
+    public void setUrls() {
+        imgUrl = new ArrayList<>();
+        vidUrl = new ArrayList<>();
+
+        /* Processing description */
+        try {
+            String[] strArr = this.description.split("<");
+            for (String split: strArr) {
+                if (split.length() > 0) {
+                    if (split.charAt(0) == 'i') {
+                        String[] strArr2 = split.split("\"");
+                        imgUrl.add(strArr2[1]);
+                    } else if (split.charAt(0) == 'v') {
+                        String[] strArr2 = split.split("\"");
+                        vidUrl.add(strArr2[1]);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.d("Article", "" + e);
+        }
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getLink() {
@@ -46,5 +90,13 @@ public class Article {
 
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
+    }
+
+    public ArrayList<String> getImgUrl() {
+        return imgUrl;
+    }
+
+    public ArrayList<String> getVidUrl() {
+        return vidUrl;
     }
 }

@@ -36,21 +36,9 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             rss = response.body();
-            /*
-            //    Test code
-            Log.d("Callback", "" + rss.getTitle());
-            Log.d("Callback", "" + rss.getLink());
-            Log.d("Callback", "" + rss.getImgUrl());
-            try {
-                for (Article article: rss.getArticles()) {
-                    Log.d("Callback", "" + article.getLink());
-                    Log.d("Callback", "" + article.getDescription());
-                    Log.d("Callback", "" + article.getPubDate());
-                }
-            } catch (Exception e) {
-                Log.d("Callback", "" + e);
+            for (Article article: rss.getArticles()) {
+                article.setUrls();
             }
-            */
         }
 
         @Override
