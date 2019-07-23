@@ -4,13 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.imageView)
+    ImageView tmpImgView;
 
     private Feeder feeder;
     private Rss rss;
@@ -39,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
             for (Article article: rss.getArticles()) {
                 article.setUrls();
             }
+
+            Glide.with(getApplicationContext())
+                .load(rss.getImgUrl())
+                .centerCrop()
+                .into(tmpImgView);
         }
 
         @Override
