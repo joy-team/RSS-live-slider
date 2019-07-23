@@ -51,7 +51,7 @@ public class Feeder {
     }
 
     public Call<Rss> callRss() {
-        Call<Rss> callRss = api.getChannel();
+        Call<Rss> callRss = api.getChannel(this.userCode);
         return callRss;
     }
 }
