@@ -59,28 +59,34 @@ public class ContentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_contents,container,false);
 
-        if(getArguments()!=null){
-            contentDate = getArguments().getString("DATE");
-            contentDes = getArguments().getString("DESCRIPTION");
-            //contentRes = getArguments().getString("RESOURCE");
-        }else{
-            Log.d("get_rss","no arg");
-        }
-
         tabLayout = view.findViewById(R.id.tabLayout);
         view_contentDate = view.findViewById(R.id.content_date);
         view_contentDes = view.findViewById(R.id.content_des);
         view_contentPlace = view.findViewById(R.id.content_place);
         view_contentRes = view.findViewById(R.id.content_res);
 
+        if(getArguments()!=null){
+            contentDate = getArguments().getString("DATE");
+            contentDes = getArguments().getString("DESCRIPTION");
+            try {
+                contentRes = getArguments().getString("RESOURCE");
+                Log.d("get_rss_suc",contentRes);
+                Glide.with(getActivity().getApplicationContext()).load(contentRes).into(view_contentRes);
+            }catch(Exception e){
+                contentRes="";
+                e.printStackTrace();
+            }
+        }else{
+            Log.d("get_rss","no arg");
+        }
+
         view_contentDate.setText(contentDate);
         view_contentDes.setText(contentDes);
-
         for (int i=0;i<2;i++){
             TabLayout.Tab tab = tabLayout.newTab();
 
-            Drawable tabImage = getResources().getDrawable(R.drawable.conversation);
-            tab.setIcon(tabImage);
+            //Drawable tabImage = getResources().getDrawable(R.drawable.conversation);
+            //tab.setIcon(tabImage);
             tabLayout.addTab(tab);
         }
 

@@ -31,7 +31,10 @@ public class ContentsAdapter extends FragmentPagerAdapter {
         Bundle content_bundle = new Bundle();
         content_bundle.putString("DATE",cur_content.getPubDate());
         content_bundle.putString("DESCRIPTION",cur_content.getTitle());
-        //content_bundle.putString("RESOURCE",cur_content.getImgUrls().get(0));
+        if(cur_content.getImgUrls().size()>0){
+            Log.d("get_rss",cur_content.getImgUrls().get(0));
+            content_bundle.putString("RESOURCE",cur_content.getImgUrls().get(0));
+        }
 
         return contentsFragment.newInstance(content_bundle);
     }
