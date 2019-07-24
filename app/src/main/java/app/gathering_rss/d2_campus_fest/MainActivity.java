@@ -43,14 +43,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             rss = response.body();
-            for (Article article: rss.getArticles()) {
-                article.setUrls();
-            }
 
-            Glide.with(getApplicationContext())
-                .load(rss.getImgUrl())
-                .centerCrop()
-                .into(tmpImgView);
+            loadImage(tmpImgView, rss.getImgUrl());
         }
 
         @Override
@@ -58,4 +52,11 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Callback", "" + t);
         }
     };
+
+    private void loadImage(ImageView iv, String imgUrl) {
+        Glide.with(getApplicationContext())
+                .load(imgUrl)
+                .centerCrop()
+                .into(iv);
+    }
 }

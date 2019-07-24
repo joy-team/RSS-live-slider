@@ -22,13 +22,13 @@ import retrofit2.Retrofit;
 
 public class Feeder {
 
-    private final String userCode;
+    private final String xml;
     private final Retrofit retrofit;
     private final FeederApi api;
     private static final OkHttpClient client = createClient();
 
-    public Feeder(String userCode) {
-        this.userCode = userCode;
+    public Feeder(String xml) {
+        this.xml = xml;
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.RSS_URL)
                 .addConverterFactory(TikXmlConverterFactory.create(
@@ -46,12 +46,8 @@ public class Feeder {
         return builder.build();
     }
 
-    public String getUrl() {
-        return Constant.RSS_URL + this.userCode;
-    }
-
     public Call<Rss> callRss() {
-        Call<Rss> callRss = api.getChannel(this.userCode);
+        Call<Rss> callRss = api.getRss(this.xml);
         return callRss;
     }
 }

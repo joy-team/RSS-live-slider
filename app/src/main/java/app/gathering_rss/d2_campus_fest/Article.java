@@ -34,7 +34,6 @@ public class Article {
         this.link = link;
         this.description = description;
         this.pubDate = pubDate;
-        setUrls();
     }
 
     public void setUrls() {
@@ -66,6 +65,12 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
+        try {
+            String[] strArr = title.split(" ");
+            this.title = strArr[0];
+        } catch (Exception e) {
+            Log.d("Article", "" + e);
+        }
     }
 
     public String getLink() {
@@ -82,6 +87,7 @@ public class Article {
 
     public void setDescription(String description) {
         this.description = description;
+        setUrls();
     }
 
     public String getPubDate() {
