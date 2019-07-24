@@ -62,7 +62,7 @@ public class ContentsFragment extends Fragment {
         if(getArguments()!=null){
             contentDate = getArguments().getString("DATE");
             contentDes = getArguments().getString("DESCRIPTION");
-            contentRes = getArguments().getString("RESOURCE");
+            //contentRes = getArguments().getString("RESOURCE");
         }else{
             Log.d("get_rss","no arg");
         }
