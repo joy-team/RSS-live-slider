@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/content_date"
@@ -32,12 +34,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true">
 
         <ImageView
             android:id="@+id/content_res"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             app:srcCompat="@drawable/conversation" />
 
         <com.google.android.material.tabs.TabLayout
@@ -49,7 +53,7 @@
             app:tabGravity="center"
             app:tabIndicatorColor="@android:color/transparent"
             app:tabIndicatorHeight="0dp"
-            app:tabRippleColor="@android:color/transparent"/>
+            app:tabRippleColor="@android:color/transparent" />
 
     </FrameLayout>
 
