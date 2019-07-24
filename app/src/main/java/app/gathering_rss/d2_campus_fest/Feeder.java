@@ -11,11 +11,8 @@ import retrofit2.Retrofit;
 /*
 *
 * TODO:
-*       - Create API with user code
 *       - Implement function for notifying new article
-*       - Implement function for processing description to specific contents url
 *       - Implement function for processing pubDate with custom format
-*       - Implement function for loading image
 *       - Implement function for loading video
 *
 */
