@@ -46,7 +46,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.ViewHolder holder, int position) {
         Rss userFeed = feedList.get(position);
-        ContentsAdapter contentsAdapter = new ContentsAdapter(fragmentManager, userFeed);
+        ContentsAdapter contentsAdapter = new ContentsAdapter(context, fragmentManager, userFeed);
 
         holder.viewPager.setAdapter(contentsAdapter);
         holder.viewPager.setId(position+1);
