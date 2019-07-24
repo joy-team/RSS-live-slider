@@ -44,7 +44,18 @@ public class MainActivity extends AppCompatActivity {
             }
             rss = response.body();
 
-            loadImage(tmpImgView, rss.getImgUrl());
+            // 인스타 아이디 가져오기
+            // rss.getTitle()
+
+            // 프로필 사진 불러오기
+            // loadImage(tmpImgView, rss.getImgUrl());
+
+            // 게시글 사진 불러오기
+            // try {
+            //     loadImage(tmpImgView, rss.getArticles().get(1).getImgUrls().get(0));
+            // } catch (Exception e) {
+            //     Log.d("Callback", "" + e);
+            // }
         }
 
         @Override

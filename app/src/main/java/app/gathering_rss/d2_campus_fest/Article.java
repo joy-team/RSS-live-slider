@@ -22,9 +22,9 @@ public class Article {
     @PropertyElement
     private String pubDate;
 
-    private ArrayList<String> imgUrl;
+    private ArrayList<String> imgUrls;
 
-    private ArrayList<String> vidUrl;
+    private ArrayList<String> vidUrls;
 
     public Article() {
     }
@@ -37,8 +37,8 @@ public class Article {
     }
 
     public void setUrls() {
-        imgUrl = new ArrayList<>();
-        vidUrl = new ArrayList<>();
+        imgUrls = new ArrayList<>();
+        vidUrls = new ArrayList<>();
 
         /* Processing description */
         try {
@@ -47,10 +47,10 @@ public class Article {
                 if (split.length() > 0) {
                     if (split.charAt(0) == 'i') {
                         String[] strArr2 = split.split("\"");
-                        imgUrl.add(strArr2[1]);
+                        imgUrls.add(strArr2[1]);
                     } else if (split.charAt(0) == 'v') {
                         String[] strArr2 = split.split("\"");
-                        vidUrl.add(strArr2[1]);
+                        vidUrls.add(strArr2[1]);
                     }
                 }
             }
@@ -65,12 +65,6 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
-        try {
-            String[] strArr = title.split(" ");
-            this.title = strArr[0];
-        } catch (Exception e) {
-            Log.d("Article", "" + e);
-        }
     }
 
     public String getLink() {
@@ -98,11 +92,11 @@ public class Article {
         this.pubDate = pubDate;
     }
 
-    public ArrayList<String> getImgUrl() {
-        return imgUrl;
+    public ArrayList<String> getImgUrls() {
+        return imgUrls;
     }
 
-    public ArrayList<String> getVidUrl() {
-        return vidUrl;
+    public ArrayList<String> getVidUrls() {
+        return vidUrls;
     }
 }

@@ -1,5 +1,7 @@
 package app.gathering_rss.d2_campus_fest;
 
+import android.util.Log;
+
 import com.tickaroo.tikxml.annotation.Element;
 import com.tickaroo.tikxml.annotation.Path;
 import com.tickaroo.tikxml.annotation.PropertyElement;
@@ -42,6 +44,12 @@ public class Rss {
 
     public void setTitle(String title) {
         this.title = title;
+        try {
+            String[] strArr = title.split(" ");
+            this.title = strArr[0];
+        } catch (Exception e) {
+            Log.d("rss", "" + e);
+        }
     }
 
     public String getLink() {
