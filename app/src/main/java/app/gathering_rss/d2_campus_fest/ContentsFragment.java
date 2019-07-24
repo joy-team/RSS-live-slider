@@ -14,16 +14,18 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.List;
+
 public class ContentsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private int mParam1;
-    private Context context;
+    private Article contents;
 
     public ContentsFragment() {
     }
 
-    public ContentsFragment(Context context){
-        this.context = context;
+    public ContentsFragment(Article contents){
+        this.contents = contents;
     }
 
     public static ContentsFragment newInstance(int param1) {

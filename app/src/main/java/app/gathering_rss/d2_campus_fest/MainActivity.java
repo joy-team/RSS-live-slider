@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private Feeder feeder;
     private Rss rss;
     private Call<Rss> rssCall;
+    private ArrayList<Rss> feedList;
+    private FeedAdapter feedAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +37,28 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<ContentsAdapter> items = new ArrayList<>();
-
-        ContentsAdapter contentsAdapter = new ContentsAdapter(getSupportFragmentManager());
-        items.add(contentsAdapter);
-        ContentsAdapter contentsAdapter1 = new ContentsAdapter(getSupportFragmentManager());
-        items.add(contentsAdapter1);
-        ContentsAdapter contentsAdapter2 = new ContentsAdapter(getSupportFragmentManager());
-        items.add(contentsAdapter2);
-
-        FeedAdapter feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), items);
+        feedList = new ArrayList<>();
+        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
         recyclerView.setAdapter(feedAdapter);
 
+        //get rss_feed
         feeder = new Feeder(Constant.HYUNJIN);
+        rssCall = feeder.callRss();
+        rssCall.enqueue(channelCallback);
+
+        feeder = new Feeder(Constant.JENNY);
+        rssCall = feeder.callRss();
+        rssCall.enqueue(channelCallback);
+
+        feeder = new Feeder(Constant.JISOO);
+        rssCall = feeder.callRss();
+        rssCall.enqueue(channelCallback);
+
+        feeder = new Feeder(Constant.ROSE);
+        rssCall = feeder.callRss();
+        rssCall.enqueue(channelCallback);
+
+        feeder = new Feeder(Constant.LISA);
         rssCall = feeder.callRss();
         rssCall.enqueue(channelCallback);
     }
@@ -60,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             rss = response.body();
+            feedList.add(rss);
+
+            feedAdapter.notifyDataSetChanged();
 
             // 인스타 아이디 가져오기
             // rss.getTitle()
