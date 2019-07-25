@@ -14,7 +14,6 @@ import java.util.List;
 public class ContentsAdapter extends FragmentPagerAdapter {
     private Context context;
     private List<Article> contents;
-    private ArrayList<ContentsFragment> fragments = new ArrayList<>();
 
     public ContentsAdapter(Context context, FragmentManager fm, Rss feed) {
         super(fm);
@@ -25,10 +24,11 @@ public class ContentsAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         //create & add fragment for each article(content)
-        ContentsFragment contentsFragment = new ContentsFragment(context, contents.get(position));
+        ContentsFragment contentsFragment = new ContentsFragment();
         Article cur_content = contents.get(position);
 
         Bundle content_bundle = new Bundle();
+        Log.d("get_rss",cur_content.getTitle());
         content_bundle.putString("DATE",cur_content.getFormattedPubDate());
         content_bundle.putString("DESCRIPTION",cur_content.getTitle());
         content_bundle.putStringArrayList("RESOURCE_IMG",cur_content.getImgUrls());

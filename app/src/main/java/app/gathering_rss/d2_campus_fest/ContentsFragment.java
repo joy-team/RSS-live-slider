@@ -1,7 +1,5 @@
 package app.gathering_rss.d2_campus_fest;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,16 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContentsFragment extends Fragment {
-    private Context context;
-
-    private Article content;
     private String contentDate = "";
     private String contentPlace = "";
     private ArrayList<String> contentImg = new ArrayList<>();
@@ -32,6 +25,9 @@ public class ContentsFragment extends Fragment {
     private String contentDes = "";
 
     private TabLayout tabLayout;
+    private View tabView;
+    private ImageView tabImg;
+
     private TextView view_contentDate;
     private TextView view_contentDes;
     private TextView view_contentPlace;
@@ -39,11 +35,6 @@ public class ContentsFragment extends Fragment {
 
 
     public ContentsFragment() {
-    }
-
-    public ContentsFragment(Context context, Article content){
-        this.context = context;
-        this.content = content;
     }
 
     public ContentsFragment newInstance(Bundle content_bundle) {
@@ -72,27 +63,32 @@ public class ContentsFragment extends Fragment {
             contentDes = getArguments().getString("DESCRIPTION");
             contentImg = getArguments().getStringArrayList("RESOURCE_IMG");
             contentVid = getArguments().getStringArrayList("RESOURCE_VID");
-            /*
             try {
-                contentRes = getArguments().getString("RESOURCE");
-                Log.d("get_rss_suc",contentRes);
-                Glide.with(getActivity().getApplicationContext()).load(contentRes).into(view_contentRes);
+                Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
             }catch(Exception e){
-                contentRes="";
                 e.printStackTrace();
             }
-            */
         }else{
             Log.d("get_rss","no arg");
         }
 
         view_contentDate.setText(contentDate);
         view_contentDes.setText(contentDes);
-        for (int i=0;i<2;i++){
+
+        //set bottom tab
+        for(int i=0;i<contentImg.size();i++){
             TabLayout.Tab tab = tabLayout.newTab();
 
-            //Drawable tabImage = getResources().getDrawable(R.drawable.conversation);
-            //tab.setIcon(tabImage);
+            tabView = getLayoutInflater().inflate(R.layout.contents_tab,null);
+            tabImg = tabView.findViewById(R.id.tab_img);
+            tabView.setMinimumHeight(50);
+            tabView.setMinimumWidth(50);
+            try{
+                Glide.with(getActivity().getApplicationContext()).load(contentImg.get(i)).into(tabImg);
+                tab.setCustomView(tabView);
+            }catch (Exception e){
+
+            }
             tabLayout.addTab(tab);
         }
 
