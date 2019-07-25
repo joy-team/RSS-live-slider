@@ -10,10 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp">
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/content_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2019.07.13"
@@ -21,7 +23,7 @@
             android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/tv_date"
+            android:id="@+id/content_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="신사동 어딘가에서"
@@ -32,26 +34,25 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true">
 
         <ImageView
-            android:id="@+id/iv_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/conversation" />
-
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+            android:id="@+id/content_res"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom|center_vertical"
-            android:layout_marginBottom="130dp"
-            android:background="@color/cardview_image_prev">
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-        </HorizontalScrollView>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@color/cardview_image_prev"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabIndicatorHeight="0dp"
+            app:tabRippleColor="@android:color/transparent" />
 
     </FrameLayout>
 
@@ -62,7 +63,7 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/content_des"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="다혜랑 케이크 먹었다" />
