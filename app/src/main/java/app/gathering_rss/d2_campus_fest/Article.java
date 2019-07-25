@@ -90,9 +90,8 @@ public class Article {
     }
 
     public String getFormattedPubDate() {
-        SimpleDateFormat outFormat = new SimpleDateFormat("yyyy년 M월 dd일 E요일 hh:mm", Locale.KOREA);
-        outFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return outFormat.format(this.pubDate);
+        SimpleDateFormat outFormat = new SimpleDateFormat("yyyy년 M월 dd일 E요일 HH:mm");
+        return outFormat.format(pubDate);
     }
 
     public Date getPubDate() {

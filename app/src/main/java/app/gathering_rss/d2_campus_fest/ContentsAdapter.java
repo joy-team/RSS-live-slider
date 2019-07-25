@@ -29,7 +29,7 @@ public class ContentsAdapter extends FragmentPagerAdapter {
         Article cur_content = contents.get(position);
 
         Bundle content_bundle = new Bundle();
-        content_bundle.putString("DATE",cur_content.getPubDate());
+        content_bundle.putString("DATE",cur_content.getFormattedPubDate());
         content_bundle.putString("DESCRIPTION",cur_content.getTitle());
         if(cur_content.getImgUrls().size()>0){
             Log.d("get_rss",cur_content.getImgUrls().get(0));
