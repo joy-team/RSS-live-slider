@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContentsFragment extends Fragment {
@@ -26,7 +27,8 @@ public class ContentsFragment extends Fragment {
     private Article content;
     private String contentDate = "";
     private String contentPlace = "";
-    private String contentRes = "";
+    private ArrayList<String> contentImg = new ArrayList<>();
+    private ArrayList<String> contentVid = new ArrayList<>();
     private String contentDes = "";
 
     private TabLayout tabLayout;
@@ -68,6 +70,9 @@ public class ContentsFragment extends Fragment {
         if(getArguments()!=null){
             contentDate = getArguments().getString("DATE");
             contentDes = getArguments().getString("DESCRIPTION");
+            contentImg = getArguments().getStringArrayList("RESOURCE_IMG");
+            contentVid = getArguments().getStringArrayList("RESOURCE_VID");
+            /*
             try {
                 contentRes = getArguments().getString("RESOURCE");
                 Log.d("get_rss_suc",contentRes);
@@ -76,6 +81,7 @@ public class ContentsFragment extends Fragment {
                 contentRes="";
                 e.printStackTrace();
             }
+            */
         }else{
             Log.d("get_rss","no arg");
         }
