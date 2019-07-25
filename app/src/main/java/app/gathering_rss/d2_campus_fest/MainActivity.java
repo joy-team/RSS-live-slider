@@ -74,19 +74,6 @@ public class MainActivity extends AppCompatActivity {
             feedList.add(rss);
 
             feedAdapter.notifyDataSetChanged();
-
-            // 인스타 아이디 가져오기
-            // rss.getTitle()
-
-            // 프로필 사진 불러오기
-            // loadImage(tmpImgView, rss.getImgUrl());
-
-            // 게시글 사진 불러오기
-            // try {
-            //     loadImage(tmpImgView, rss.getArticles().get(1).getImgUrls().get(0));
-            // } catch (Exception e) {
-            //     Log.d("Callback", "" + e);
-            // }
         }
 
         @Override
@@ -94,11 +81,4 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Callback", "" + t);
         }
     };
-
-    private void loadImage(ImageView iv, String imgUrl) {
-        Glide.with(getApplicationContext())
-                .load(imgUrl)
-                .centerCrop()
-                .into(iv);
-    }
 }
