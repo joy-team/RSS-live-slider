@@ -5,7 +5,11 @@ import android.util.Log;
 import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @Xml
 public class Article {
@@ -19,8 +23,8 @@ public class Article {
     @PropertyElement
     private String description;
 
-    @PropertyElement
-    private String pubDate;
+    @PropertyElement(converter = MyDateConverter.class)
+    private Date pubDate;
 
     private ArrayList<String> imgUrls;
 
@@ -29,7 +33,7 @@ public class Article {
     public Article() {
     }
 
-    public Article(String title, String link, String description, String pubDate) {
+    public Article(String title, String link, String description, Date pubDate) {
         this.title = title;
         this.link = link;
         this.description = description;
@@ -85,11 +89,17 @@ public class Article {
         setUrls();
     }
 
-    public String getPubDate() {
+    public String getFormattedPubDate() {
+        SimpleDateFormat outFormat = new SimpleDateFormat("yyyy년 M월 dd일 E요일 hh:mm", Locale.KOREA);
+        outFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return outFormat.format(this.pubDate);
+    }
+
+    public Date getPubDate() {
         return pubDate;
     }
 
-    public void setPubDate(String pubDate) {
+    public void setPubDate(Date pubDate) {
         this.pubDate = pubDate;
     }
 
