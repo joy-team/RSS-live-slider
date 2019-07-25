@@ -65,6 +65,7 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
+        if (title.equals("New post")) this.title = "";
     }
 
     public String getLink() {

@@ -46,7 +46,7 @@ public class Rss {
         this.title = title;
         try {
             String[] strArr = title.split(" ");
-            this.title = strArr[0];
+            this.title = strArr[0].substring(1);
         } catch (Exception e) {
             Log.d("rss", "" + e);
         }
