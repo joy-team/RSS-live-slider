@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">d2-campus-fest</string>
+    <string name="edit_hint">Search</string>
 </resources>
