@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class ContentsAdapter extends FragmentPagerAdapter {
     private Context context;
     private List<Article> contents;

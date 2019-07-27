@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
 
-    private int lastVisibleItemPos = 0;
+    private int lastVisibleItemPos = -1;
     static ContentsFragment lastVisibleItem = null;
     static HashMap<String, ContentsFragment> activeFragment = new HashMap<>();
 
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("scroll",new Integer(firstVisibleItemPos).toString());
 
                 if(firstVisibleItemPos != lastVisibleItemPos){
+                    /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
                     Log.d("active","scroll:"+new Integer(firstVisibleItemPos).toString()+"index:"+activeFragment.get(feedList.get(firstVisibleItemPos).toString()).toString());
                     lastVisibleItemPos = firstVisibleItemPos;
                 }

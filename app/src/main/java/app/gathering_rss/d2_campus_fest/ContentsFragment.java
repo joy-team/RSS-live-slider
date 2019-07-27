@@ -47,10 +47,12 @@ public class ContentsFragment extends Fragment {
         if(isVisibleToUser){
             Log.d("active","visible : "+this.toString());
             MainActivity.activeFragment.put(feed,this);
+            /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생 ( 이것은 뷰페이저를 넘기는 경우를 포함 ) 
             IS_VISIBLE = true;
 
         }else{
             Log.d("get_focus","not visible : "+this.toString());
+            /// TODO: 2019-07-28 재생중이라면 재생 멈춤
             IS_VISIBLE = false;
         }
     }
