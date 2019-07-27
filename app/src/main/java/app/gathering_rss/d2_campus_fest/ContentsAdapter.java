@@ -14,11 +14,15 @@ import java.util.List;
 public class ContentsAdapter extends FragmentPagerAdapter {
     private Context context;
     private List<Article> contents;
+    private int index;
+    private Rss feed;
 
-    public ContentsAdapter(Context context, FragmentManager fm, Rss feed) {
+    public ContentsAdapter(Context context, FragmentManager fm, Rss feed, int index) {
         super(fm);
         this.context = context;
+        this.feed = feed;
         this.contents = feed.getArticles();
+        this.index = index;
     }
 
     @Override
@@ -28,12 +32,14 @@ public class ContentsAdapter extends FragmentPagerAdapter {
         Article cur_content = contents.get(position);
 
         Bundle content_bundle = new Bundle();
-        Log.d("get_rss",cur_content.getTitle());
+        content_bundle.putString("RSS",feed.toString());
         content_bundle.putString("DATE",cur_content.getFormattedPubDate());
         content_bundle.putString("DESCRIPTION",cur_content.getTitle());
         content_bundle.putStringArrayList("RESOURCE_IMG",cur_content.getImgUrls());
         content_bundle.putStringArrayList("RESOURCE_VIDEO",cur_content.getVidUrls());
 
+        if(position==0)
+            MainActivity.activeFragment.put(feed.toString(), contentsFragment);
         return contentsFragment.newInstance(content_bundle);
     }
 

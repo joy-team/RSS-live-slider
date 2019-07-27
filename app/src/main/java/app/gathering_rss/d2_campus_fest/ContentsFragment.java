@@ -33,8 +33,26 @@ public class ContentsFragment extends Fragment {
     private TextView view_contentPlace;
     private ImageView view_contentRes;
 
+    private String feed;
+
+    public boolean IS_VISIBLE = false;
+
 
     public ContentsFragment() {
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            Log.d("active","visible : "+this.toString());
+            MainActivity.activeFragment.put(feed,this);
+            IS_VISIBLE = true;
+
+        }else{
+            Log.d("get_focus","not visible : "+this.toString());
+            IS_VISIBLE = false;
+        }
     }
 
     public ContentsFragment newInstance(Bundle content_bundle) {
@@ -59,6 +77,7 @@ public class ContentsFragment extends Fragment {
         view_contentRes = view.findViewById(R.id.content_res);
 
         if(getArguments()!=null){
+            feed = getArguments().getString("RSS");
             contentDate = getArguments().getString("DATE");
             contentDes = getArguments().getString("DESCRIPTION");
             contentImg = getArguments().getStringArrayList("RESOURCE_IMG");
