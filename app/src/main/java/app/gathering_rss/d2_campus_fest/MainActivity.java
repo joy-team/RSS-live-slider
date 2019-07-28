@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private FeedAdapter feedAdapter;
 
     private int lastVisibleItemPos = -1;
-    static ContentsFragment lastVisibleItem = null;
-    static HashMap<String, ContentsFragment> activeFragment = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 int firstVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-                Log.d("scroll",new Integer(firstVisibleItemPos).toString());
 
                 if(firstVisibleItemPos != lastVisibleItemPos){
                     /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
-                    Log.d("active","scroll:"+new Integer(firstVisibleItemPos).toString()+"index:"+activeFragment.get(feedList.get(firstVisibleItemPos).toString()).toString());
+                    Log.d("now playing", "scroll changed : "+new Integer(firstVisibleItemPos).toString());
+                    FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
                     lastVisibleItemPos = firstVisibleItemPos;
                 }
 

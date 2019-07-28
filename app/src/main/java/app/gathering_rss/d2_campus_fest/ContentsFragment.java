@@ -1,6 +1,7 @@
 package app.gathering_rss.d2_campus_fest;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,10 +34,7 @@ public class ContentsFragment extends Fragment {
     private TextView view_contentPlace;
     private ImageView view_contentRes;
 
-    private String feed;
-
-    public boolean IS_VISIBLE = false;
-
+    private String str_feed;
 
     public ContentsFragment() {
     }
@@ -45,15 +43,9 @@ public class ContentsFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser){
-            Log.d("active","visible : "+this.toString());
-            MainActivity.activeFragment.put(feed,this);
-            /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생 ( 이것은 뷰페이저를 넘기는 경우를 포함 ) 
-            IS_VISIBLE = true;
-
+            FragmentManager.updateFocus_hor(str_feed, this);
         }else{
-            Log.d("get_focus","not visible : "+this.toString());
-            /// TODO: 2019-07-28 재생중이라면 재생 멈춤
-            IS_VISIBLE = false;
+
         }
     }
 
@@ -79,11 +71,17 @@ public class ContentsFragment extends Fragment {
         view_contentRes = view.findViewById(R.id.content_res);
 
         if(getArguments()!=null){
-            feed = getArguments().getString("RSS");
+            str_feed = getArguments().getString("RSS");
             contentDate = getArguments().getString("DATE");
             contentDes = getArguments().getString("DESCRIPTION");
             contentImg = getArguments().getStringArrayList("RESOURCE_IMG");
             contentVid = getArguments().getStringArrayList("RESOURCE_VID");
+
+            if(FragmentManager.activeFragment.get(str_feed)==null) {
+                FragmentManager.activeFragment.put(str_feed,this);
+                Log.d("now playing", "put fragment");
+            }
+
             try {
                 Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
             }catch(Exception e){
@@ -136,5 +134,25 @@ public class ContentsFragment extends Fragment {
             }
         });
         return view;
+    }
+
+
+    public void startPlaying(){
+        if(FragmentManager.playing_fragment!=null && FragmentManager.playing_fragment!=this)
+            //stop previous focused feed
+            FragmentManager.playing_fragment.stopPlaying();
+
+        if(FragmentManager.playing_fragment!=this){
+            //start playing
+            FragmentManager.playing_fragment = this;
+            /// TODO: 2019-07-28 현재 프래그먼트 재생하는 스레드 실행
+            Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
+        }
+
+    }
+
+    public void stopPlaying(){
+        Log.d("now playing","stop previous playing");
+        /// TODO: 2019-07-28 현재 프래그먼트의 재생 스레드 멈춤
     }
 }

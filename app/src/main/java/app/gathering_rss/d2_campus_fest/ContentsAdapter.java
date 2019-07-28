@@ -37,8 +37,6 @@ public class ContentsAdapter extends FragmentPagerAdapter {
         content_bundle.putStringArrayList("RESOURCE_IMG",cur_content.getImgUrls());
         content_bundle.putStringArrayList("RESOURCE_VIDEO",cur_content.getVidUrls());
 
-        if(position==0)
-            MainActivity.activeFragment.put(feed.toString(), contentsFragment);
         return contentsFragment.newInstance(content_bundle);
     }
 
