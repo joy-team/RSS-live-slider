@@ -120,6 +120,21 @@ public class ContentsFragment extends Fragment {
         view_contentDes.setText(contentDes);
 
         //set bottom tab
+        for(int i=0;i<contentVid.size();i++){
+            TabLayout.Tab tab = tabLayout.newTab();
+
+            tabView = getLayoutInflater().inflate(R.layout.contents_tab,null);
+            tabImg = tabView.findViewById(R.id.tab_img);
+            tabView.setMinimumHeight(50);
+            tabView.setMinimumWidth(50);
+            try{
+                Glide.with(getActivity().getApplicationContext()).asBitmap().load(contentVid.get(i)).into(tabImg);
+                tab.setCustomView(tabView);
+            }catch (Exception e){
+
+            }
+            tabLayout.addTab(tab);
+        }
         for(int i=0;i<contentImg.size();i++){
             TabLayout.Tab tab = tabLayout.newTab();
 
