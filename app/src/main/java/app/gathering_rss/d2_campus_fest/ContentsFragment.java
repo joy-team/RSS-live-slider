@@ -1,5 +1,6 @@
 package app.gathering_rss.d2_campus_fest;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -8,15 +9,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+
+import static android.view.View.VISIBLE;
 
 public class ContentsFragment extends Fragment {
     private String contentDate = "";
@@ -35,6 +46,13 @@ public class ContentsFragment extends Fragment {
     private ImageView view_contentRes;
 
     private String str_feed;
+
+    private PlayerView playerView;
+    private SimpleExoPlayer player;
+    private Boolean playReady = true;
+    private int curWindow = 0;
+    private long playBackPos = 0;
+
 
     public ContentsFragment() {
     }
@@ -69,6 +87,7 @@ public class ContentsFragment extends Fragment {
         view_contentDes = view.findViewById(R.id.content_des);
         view_contentPlace = view.findViewById(R.id.content_place);
         view_contentRes = view.findViewById(R.id.content_res);
+        playerView = view.findViewById(R.id.video_view);
 
         if(getArguments()!=null){
             str_feed = getArguments().getString("RSS");
@@ -82,11 +101,17 @@ public class ContentsFragment extends Fragment {
                 Log.d("now playing", "put fragment");
             }
 
-            try {
-                Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
-            }catch(Exception e){
-                e.printStackTrace();
+            if(contentVid.size()>0){
+                initPlayer();
+            }else{
+                try {
+                    Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }
+
+
         }else{
             Log.d("get_rss","no arg");
         }
@@ -146,6 +171,8 @@ public class ContentsFragment extends Fragment {
             //start playing
             FragmentManager.playing_fragment = this;
             /// TODO: 2019-07-28 현재 프래그먼트 재생하는 스레드 실행
+            if(contentVid.size()>0)
+                initPlayer();
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
 
@@ -154,5 +181,39 @@ public class ContentsFragment extends Fragment {
     public void stopPlaying(){
         Log.d("now playing","stop previous playing");
         /// TODO: 2019-07-28 현재 프래그먼트의 재생 스레드 멈춤
+        releasePlayer();
+    }
+
+
+    private void initPlayer() {
+        playerView.setVisibility(VISIBLE);
+        playerView.setUseController(false);
+
+        player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
+        player.setVolume(0f);
+
+        playerView.setPlayer(player);
+        player.setPlayWhenReady(playReady);
+        player.seekTo(curWindow, playBackPos);
+
+        Uri uri = Uri.parse(Constant.SAMPLE_VIDEO_URL);
+        MediaSource mediaSource = buildMediaSource(uri);
+        player.prepare(mediaSource);
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            playBackPos = player.getCurrentPosition();
+            curWindow = player.getCurrentWindowIndex();
+            playReady = player.getPlayWhenReady();
+            player.release();
+            player = null;
+        }
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        return new ExtractorMediaSource.Factory(
+                new DefaultHttpDataSourceFactory("Mozilla/5.0"))
+                .createMediaSource(uri);
     }
 }

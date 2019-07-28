@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
                 int firstVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
-                if(firstVisibleItemPos != lastVisibleItemPos){
+                if(firstVisibleItemPos != lastVisibleItemPos && firstVisibleItemPos !=-1 ){
                     /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
                     Log.d("now playing", "scroll changed : "+new Integer(firstVisibleItemPos).toString());
                     FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
