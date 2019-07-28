@@ -102,7 +102,7 @@ public class ContentsFragment extends Fragment {
             }
 
             if(contentVid.size()>0){
-                initPlayer();
+                initPlayer(contentVid.get(0));
             }else{
                 try {
                     Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
@@ -172,7 +172,7 @@ public class ContentsFragment extends Fragment {
             FragmentManager.playing_fragment = this;
             /// TODO: 2019-07-28 현재 프래그먼트 재생하는 스레드 실행
             if(contentVid.size()>0)
-                initPlayer();
+                initPlayer(contentVid.get(0));
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
 
@@ -185,7 +185,7 @@ public class ContentsFragment extends Fragment {
     }
 
 
-    private void initPlayer() {
+    private void initPlayer(String videoUrl) {
         playerView.setVisibility(VISIBLE);
         playerView.setUseController(false);
 
@@ -196,7 +196,7 @@ public class ContentsFragment extends Fragment {
         player.setPlayWhenReady(playReady);
         player.seekTo(curWindow, playBackPos);
 
-        Uri uri = Uri.parse(Constant.SAMPLE_VIDEO_URL);
+        Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource);
     }
