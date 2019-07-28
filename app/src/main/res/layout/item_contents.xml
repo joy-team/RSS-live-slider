@@ -79,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/layout_default_margin"
         android:layout_marginEnd="@dimen/layout_default_margin"
+        android:layout_marginBottom="@dimen/layout_default_margin"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
