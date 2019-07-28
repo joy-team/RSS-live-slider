@@ -49,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                int firstVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-
-                if(firstVisibleItemPos != lastVisibleItemPos){
+                int firstVisibleItemPos =
+                        ((LinearLayoutManager) recyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition();
+                Log.d("now playing", "" + firstVisibleItemPos);
+                if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
                     /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
-                    Log.d("now playing", "scroll changed : "+new Integer(firstVisibleItemPos).toString());
+                    Log.d("now playing", "scroll changed : " + firstVisibleItemPos);
                     FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
                     lastVisibleItemPos = firstVisibleItemPos;
                 }
