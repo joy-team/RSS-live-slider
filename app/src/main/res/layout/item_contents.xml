@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearLayout"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/dateLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/layout_default_margin"
+        android:layout_marginEnd="@dimen/layout_default_margin"
         android:orientation="vertical"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/content_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="16dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/content_place"
@@ -27,52 +30,67 @@
             android:layout_height="wrap_content"
             android:text="신사동 어딘가에서"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true">
+        android:id="@+id/resLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/layout_default_margin"
+        android:layout_marginBottom="@dimen/layout_default_margin"
+        app:layout_constraintBottom_toTopOf="@id/desLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateLayout">
 
         <ImageView
             android:id="@+id/content_res"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true" />
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:visibility="gone" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/content_tab_height"
             android:layout_gravity="bottom"
             android:background="@color/cardview_image_prev"
             app:tabGravity="center"
             app:tabIndicatorColor="@android:color/transparent"
             app:tabIndicatorHeight="0dp"
-            app:tabMaxWidth="50dp"
+            app:tabMaxWidth="@dimen/content_tab_height"
             app:tabRippleColor="@android:color/transparent" />
 
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/desLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/layout_default_margin"
+        android:layout_marginEnd="@dimen/layout_default_margin"
         android:orientation="vertical"
-        android:padding="10dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/content_des"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="15dp" />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
