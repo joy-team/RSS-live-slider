@@ -10,31 +10,32 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class ContentsAdapter extends FragmentPagerAdapter {
     private Context context;
     private List<Article> contents;
-    private ArrayList<ContentsFragment> fragments = new ArrayList<>();
+    private int index;
+    private Rss feed;
 
-    public ContentsAdapter(Context context, FragmentManager fm, Rss feed) {
+    public ContentsAdapter(Context context, FragmentManager fm, Rss feed, int index) {
         super(fm);
         this.context = context;
+        this.feed = feed;
         this.contents = feed.getArticles();
+        this.index = index;
     }
 
     @Override
     public Fragment getItem(int position) {
         //create & add fragment for each article(content)
-        ContentsFragment contentsFragment = new ContentsFragment(context, contents.get(position));
+        ContentsFragment contentsFragment = new ContentsFragment();
         Article cur_content = contents.get(position);
 
         Bundle content_bundle = new Bundle();
+        content_bundle.putString("RSS",feed.toString());
         content_bundle.putString("DATE",cur_content.getFormattedPubDate());
         content_bundle.putString("DESCRIPTION",cur_content.getTitle());
-        if(cur_content.getImgUrls().size()>0){
-            Log.d("get_rss",cur_content.getImgUrls().get(0));
-            content_bundle.putString("RESOURCE",cur_content.getImgUrls().get(0));
-        }
+        content_bundle.putStringArrayList("RESOURCE_IMG",cur_content.getImgUrls());
+        content_bundle.putStringArrayList("RESOURCE_VID",cur_content.getVidUrls());
 
         return contentsFragment.newInstance(content_bundle);
     }

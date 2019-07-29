@@ -1,6 +1,8 @@
 package app.gathering_rss.d2_campus_fest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
 
+    private int lastVisibleItemPos = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,22 @@ public class MainActivity extends AppCompatActivity {
         feedList = new ArrayList<>();
         feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
         recyclerView.setAdapter(feedAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int firstVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+                if(firstVisibleItemPos != lastVisibleItemPos && firstVisibleItemPos !=-1 ){
+                    /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
+                    Log.d("now playing", "scroll changed : "+new Integer(firstVisibleItemPos).toString());
+                    FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
+                    lastVisibleItemPos = firstVisibleItemPos;
+                }
+
+            }
+        });
 
         //get rss_feed
         feeder = new Feeder(Constant.HYUNJIN);

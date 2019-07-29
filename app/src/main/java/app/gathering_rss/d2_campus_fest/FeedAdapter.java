@@ -1,6 +1,8 @@
 package app.gathering_rss.d2_campus_fest;
 
 import android.content.Context;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     private ArrayList<Rss> feedList;
     private FragmentManager fragmentManager;
 
+    public ContentsAdapter contentsAdapter;
+
     private String userId;
     private String userImg;
 
@@ -46,7 +50,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.ViewHolder holder, int position) {
         Rss userFeed = feedList.get(position);
-        ContentsAdapter contentsAdapter = new ContentsAdapter(context, fragmentManager, userFeed);
+        contentsAdapter = new ContentsAdapter(context, fragmentManager, userFeed, position);
+        Log.d("position",new Integer(position).toString());
+        Log.d("rss_tag",feedList.get(position).toString());
 
         holder.viewPager.setAdapter(contentsAdapter);
         holder.viewPager.setId(position+1);
@@ -98,6 +104,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             int margin = 30;
             viewPager.setPadding(margin, 0, margin, 0);
             viewPager.setPageMargin(margin/2);
+
+            //rounding profile_imageView
+            view_userImg.setBackground(new ShapeDrawable(new OvalShape()));
+            view_userImg.setClipToOutline(true);
         }
     }
 }
