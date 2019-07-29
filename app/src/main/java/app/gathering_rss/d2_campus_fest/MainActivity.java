@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -31,19 +32,40 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_search_btn)
     ImageButton searchBtn;
 
-    private Feeder feeder;
-    private Rss rss;
-    private Call<Rss> rssCall;
+    @BindView(R.id.main_container)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
 
     private int lastVisibleItemPos = -1;
+
+    private Callback<Rss> rssCallback = new Callback<Rss>() {
+        @Override
+        public void onResponse(Call<Rss> call, Response<Rss> response) {
+            if (!response.isSuccessful()) {
+                Log.d("Callback", "Response fail");
+                return;
+            }
+            Rss rss = response.body();
+            feedList.add(rss);
+
+            feedAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onFailure(Call<Rss> call, Throwable t) {
+            Log.d("Callback", "" + t);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
@@ -64,48 +86,24 @@ public class MainActivity extends AppCompatActivity {
                     FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
                     lastVisibleItemPos = firstVisibleItemPos;
                 }
-
             }
         });
 
-        //get rss_feed
-        feeder = new Feeder(Constant.HYUNJIN);
-        rssCall = feeder.callRss();
-        rssCall.enqueue(channelCallback);
-
-        feeder = new Feeder(Constant.JENNY);
-        rssCall = feeder.callRss();
-        rssCall.enqueue(channelCallback);
-
-        feeder = new Feeder(Constant.JISOO);
-        rssCall = feeder.callRss();
-        rssCall.enqueue(channelCallback);
-
-        feeder = new Feeder(Constant.ROSE);
-        rssCall = feeder.callRss();
-        rssCall.enqueue(channelCallback);
-
-        feeder = new Feeder(Constant.LISA);
-        rssCall = feeder.callRss();
-        rssCall.enqueue(channelCallback);
+        callRss();
     }
 
-    private Callback<Rss> channelCallback = new Callback<Rss>() {
-        @Override
-        public void onResponse(Call<Rss> call, Response<Rss> response) {
-            if (!response.isSuccessful()) {
-                Log.d("Callback", "Response fail");
-                return;
-            }
-            rss = response.body();
-            feedList.add(rss);
-
-            feedAdapter.notifyDataSetChanged();
+    private void callRss() {
+        for (String userCode: Constant.USER_CODES) {
+            Feeder feeder = new Feeder(userCode);
+            Call<Rss> rssCall = feeder.callRss();
+            rssCall.enqueue(rssCallback);
         }
+    }
 
-        @Override
-        public void onFailure(Call<Rss> call, Throwable t) {
-            Log.d("Callback", "" + t);
-        }
-    };
+    @Override
+    public void onRefresh() {
+        feedList.clear();
+        callRss();
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }
