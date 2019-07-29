@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
+    private InputMethodManager inputMethodManager;
 
     private int lastVisibleItemPos = -1;
 
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -138,5 +142,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         }
         feedAdapter.notifyDataSetChanged();
+        inputMethodManager.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
     }
 }
