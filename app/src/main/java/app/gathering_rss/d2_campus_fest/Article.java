@@ -2,6 +2,8 @@ package app.gathering_rss.d2_campus_fest;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 

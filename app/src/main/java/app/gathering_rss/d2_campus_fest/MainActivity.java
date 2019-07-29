@@ -9,11 +9,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,7 +93,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
 
+        searchBtn.setOnClickListener((View view) -> {
+            search(editSearch.getText().toString());
+        });
+
         callRss();
+    }
+
+    @Override
+    public void onRefresh() {
+        feedList.clear();
+        callRss();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void callRss() {
@@ -100,10 +115,27 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
-    @Override
-    public void onRefresh() {
+    private void search(String keyword) {
+        ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
         feedList.clear();
-        callRss();
-        swipeRefreshLayout.setRefreshing(false);
+        for (Rss rss: tmpFeedList) {
+            Rss searched_rss = new Rss();
+            Log.d("Search", rss.getTitle());
+            searched_rss.setTitle(rss.getTitle());
+            Log.d("Search", searched_rss.getTitle());
+            searched_rss.setImgUrl(rss.getImgUrl());
+            searched_rss.setLink(rss.getLink());
+            searched_rss.setArticles(new ArrayList<Article>());
+            for (Article article: rss.getArticles()) {
+                Log.d("Search", article.getTitle());
+                if (article.getTitle().contains(keyword)) {
+                    searched_rss.getArticles().add(article);
+                }
+            }
+            if (searched_rss.getArticles().size() != 0) {
+                feedList.add(searched_rss);
+            }
+        }
+        feedAdapter.notifyDataSetChanged();
     }
 }
