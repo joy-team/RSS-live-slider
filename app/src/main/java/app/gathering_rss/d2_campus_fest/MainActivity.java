@@ -118,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void search(String keyword) {
         ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
         feedList.clear();
+        recyclerView.removeAllViews();
+
+        feedAdapter.notifyDataSetChanged();
+
         for (Rss rss: tmpFeedList) {
             Rss searched_rss = new Rss();
             Log.d("Search", rss.getTitle());
@@ -137,5 +141,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         }
         feedAdapter.notifyDataSetChanged();
+        feedAdapter.contentsAdapter.notifyDataSetChanged();
     }
 }
