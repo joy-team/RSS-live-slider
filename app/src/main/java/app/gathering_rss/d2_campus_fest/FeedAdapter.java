@@ -1,6 +1,8 @@
 package app.gathering_rss.d2_campus_fest;
 
 import android.content.Context;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +104,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             int margin = 30;
             viewPager.setPadding(margin, 0, margin, 0);
             viewPager.setPageMargin(margin/2);
+
+            //rounding profile_imageView
+            view_userImg.setBackground(new ShapeDrawable(new OvalShape()));
+            view_userImg.setClipToOutline(true);
         }
     }
 }
