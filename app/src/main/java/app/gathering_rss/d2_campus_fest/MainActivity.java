@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
             Rss rss = response.body();
             feedList.add(rss);
-
+            user_cnt++;
             if(user_cnt==user_size){
                 //sort feedList by pubDate
                 Collections.sort(feedList,sortByPubDate);
@@ -74,6 +74,19 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 feedAdapter =
                         new FeedAdapter(MainActivity.this, getSupportFragmentManager(), feedList);
                 recyclerView.setAdapter(feedAdapter);
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        int firstVisibleItemPos =
+                                ((LinearLayoutManager) recyclerView.getLayoutManager())
+                                        .findFirstCompletelyVisibleItemPosition();
+                        if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
+                            FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
+                            lastVisibleItemPos = firstVisibleItemPos;
+                        }
+                    }
+                });
             }
         }
 
@@ -99,20 +112,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         user_cnt = 0;
 
         Log.d("user_size",new Integer(user_size).toString());
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int firstVisibleItemPos =
-                        ((LinearLayoutManager) recyclerView.getLayoutManager())
-                        .findFirstCompletelyVisibleItemPosition();
-                if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
-                    FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
-                    lastVisibleItemPos = firstVisibleItemPos;
-                }
-            }
-        });
 
         searchBtn.setOnClickListener((View view) -> {
             search(editSearch.getText().toString());
@@ -149,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         feedList = new ArrayList<>();
         user_cnt = 0;
         for (String userCode: Constant.USER_CODES) {
-            user_cnt++;
             Feeder feeder = new Feeder(userCode);
             Call<Rss> rssCall = feeder.callRss();
             rssCall.enqueue(rssCallback);

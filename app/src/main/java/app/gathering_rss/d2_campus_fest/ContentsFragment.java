@@ -66,8 +66,8 @@ public class ContentsFragment extends Fragment {
     private int curWindow = 0;
     private long playBackPos = 0;
 
-    private int playVidIdx = -1;
-    private int playImgIdx = -1;
+    private int playVidIdx = 0;
+    private int playImgIdx = 0;
     private Timer timer;
 
 
@@ -128,11 +128,15 @@ public class ContentsFragment extends Fragment {
             }
 
             if(contentVid.size()>0){
-                playVidIdx = 0;
-                initPlayer(contentVid.get(playVidIdx));
+                try {
+                    Glide.with(mActivity.getApplicationContext())
+                            .load(contentImg.get(playVidIdx))
+                            .into(view_contentRes);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }else{
                 try {
-                    playImgIdx = 0;
                     Glide.with(mActivity.getApplicationContext())
                             .load(contentImg.get(playImgIdx))
                             .into(view_contentRes);
@@ -195,7 +199,13 @@ public class ContentsFragment extends Fragment {
                 Log.d("tab_select", new Integer(selected).toString());
                 if (selected < contentVid.size()) {
                     playVidIdx = selected;
-                    initPlayer(contentVid.get(playVidIdx));
+                    try {
+                        Glide.with(mActivity.getApplicationContext())
+                                .load(contentImg.get(playVidIdx))
+                                .into(view_contentRes);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 } else {
                     playImgIdx = selected - contentVid.size();
                     try {
@@ -230,7 +240,7 @@ public class ContentsFragment extends Fragment {
         if(FragmentManager.playing_fragment!=this){
             FragmentManager.playing_fragment = this;
             timer = new Timer();
-            timer.scheduleAtFixedRate(new SliderTimer(), 5000, 5000);
+            timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
 
@@ -282,7 +292,7 @@ public class ContentsFragment extends Fragment {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (playVidIdx == contentVid.size()-1 && playImgIdx == contentImg.size()-1) {
+                    if (playVidIdx == contentVid.size() && playImgIdx == contentImg.size()) {
                         RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
                         FeedAdapter.ViewHolder vh =
                                 (FeedAdapter.ViewHolder) rv.findViewHolderForAdapterPosition(MainActivity.lastVisibleItemPos);
@@ -293,18 +303,15 @@ public class ContentsFragment extends Fragment {
                         } else if (curPage == vp.getAdapter().getCount()-1) {
                             vp.setCurrentItem(0);
                         }
-                        if (contentVid.size() != 0) playVidIdx = 0;
-                        else playVidIdx = -1;
 
-                        if (contentImg.size() != 0) playImgIdx = 0;
-                        else playImgIdx = -1;
+                        playVidIdx = 0;
+                        playImgIdx = 0;
                     }
 
-                    if (playVidIdx > -1 && playVidIdx < contentVid.size()-1) {
-                        playVidIdx += 1;
+                    if (playVidIdx < contentVid.size()) {
                         initPlayer(contentVid.get(playVidIdx));
-                    } else if (playImgIdx > -1 && playImgIdx < contentImg.size()-1) {
-                        playImgIdx += 1;
+                        playVidIdx += 1;
+                    } else if (playImgIdx < contentImg.size()) {
                         try {
                             Glide.with(mActivity.getApplicationContext())
                                     .load(contentImg.get(playImgIdx))
@@ -312,6 +319,7 @@ public class ContentsFragment extends Fragment {
                         }catch(Exception e){
                             e.printStackTrace();
                         }
+                        playImgIdx += 1;
                     }
                 }
             });
