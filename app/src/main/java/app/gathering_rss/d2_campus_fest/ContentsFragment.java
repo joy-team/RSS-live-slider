@@ -2,6 +2,7 @@ package app.gathering_rss.d2_campus_fest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -20,6 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -57,6 +63,7 @@ public class ContentsFragment extends Fragment {
     private TextView view_contentDes;
     private TextView view_contentPlace;
     private ImageView view_contentRes;
+    private ProgressBar progressBar;
 
     private String str_feed;
 
@@ -114,6 +121,7 @@ public class ContentsFragment extends Fragment {
         view_contentPlace = view.findViewById(R.id.content_place);
         view_contentRes = view.findViewById(R.id.content_res);
         playerView = view.findViewById(R.id.video_view);
+        progressBar = view.findViewById(R.id.progressBar);
 
         if(getArguments()!=null){
             str_feed = getArguments().getString("RSS");
@@ -131,6 +139,19 @@ public class ContentsFragment extends Fragment {
                 try {
                     Glide.with(mActivity.getApplicationContext())
                             .load(contentImg.get(playVidIdx))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    progressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    progressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
                             .into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
@@ -139,6 +160,19 @@ public class ContentsFragment extends Fragment {
                 try {
                     Glide.with(mActivity.getApplicationContext())
                             .load(contentImg.get(playImgIdx))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    progressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    progressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
                             .into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
