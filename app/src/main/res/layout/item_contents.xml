@@ -68,7 +68,10 @@
             app:tabGravity="center"
             app:tabIndicatorColor="@android:color/transparent"
             app:tabIndicatorHeight="0dp"
-            app:tabMaxWidth="@dimen/content_tab_height"
+            app:tabMaxWidth="100dp"
+            app:tabMinWidth="@dimen/content_tab_height"
+            app:tabPaddingEnd="5dp"
+            app:tabPaddingStart="5dp"
             app:tabRippleColor="@android:color/transparent" />
 
     </FrameLayout>
