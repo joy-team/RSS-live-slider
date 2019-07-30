@@ -1,5 +1,7 @@
 package app.gathering_rss.d2_campus_fest;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,8 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -29,10 +33,15 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.VISIBLE;
 
 public class ContentsFragment extends Fragment {
+
+    private Activity mActivity;
+
     private String contentDate = "";
     private String contentPlace = "";
     private ArrayList<String> contentImg = new ArrayList<>();
@@ -56,6 +65,10 @@ public class ContentsFragment extends Fragment {
     private int curWindow = 0;
     private long playBackPos = 0;
 
+    private int playVidIdx = -1;
+    private int playImgIdx = -1;
+    private Timer timer;
+
 
     public ContentsFragment() {
     }
@@ -74,6 +87,15 @@ public class ContentsFragment extends Fragment {
         ContentsFragment fragment = new ContentsFragment();
         fragment.setArguments(content_bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
+        }
     }
 
     @Override
@@ -105,21 +127,12 @@ public class ContentsFragment extends Fragment {
             }
 
             if(contentVid.size()>0){
-                playerView.setVisibility(VISIBLE);
-                playerView.setUseController(false);
-
-                if(player == null)
-                    player = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
-                player.setVolume(0f);
-
-                playerView.setPlayer(player);
-                player.setPlayWhenReady(playReady);
-                player.seekTo(curWindow, playBackPos);
-
+                playVidIdx = 0;
                 initPlayer(contentVid.get(0));
             }else{
                 try {
-                    Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
+                    playImgIdx = 0;
+                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -142,7 +155,11 @@ public class ContentsFragment extends Fragment {
             tabView.setMinimumHeight(50);
             tabView.setMinimumWidth(50);
             try{
-                Glide.with(getActivity().getApplicationContext()).asBitmap().load(contentVid.get(i)).into(tabImg);
+                Glide.with(mActivity.getApplicationContext())
+                        .asBitmap()
+                        .load(contentVid.get(i))
+                        .thumbnail(0.1f)
+                        .into(tabImg);
                 tab.setCustomView(tabView);
             }catch (Exception e){
 
@@ -157,7 +174,7 @@ public class ContentsFragment extends Fragment {
             tabView.setMinimumHeight(50);
             tabView.setMinimumWidth(50);
             try{
-                Glide.with(getActivity().getApplicationContext()).load(contentImg.get(i)).into(tabImg);
+                Glide.with(mActivity.getApplicationContext()).load(contentImg.get(i)).into(tabImg);
                 tab.setCustomView(tabView);
             }catch (Exception e){
 
@@ -170,8 +187,10 @@ public class ContentsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 int selected = tabLayout.getSelectedTabPosition();
                 Log.d("tab_select", new Integer(selected).toString());
+                // TODO: Exception handling for video tab
+                playImgIdx = selected;
                 try {
-                    Glide.with(getActivity().getApplicationContext()).load(contentImg.get(selected)).into(view_contentRes);
+                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(selected)).into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -197,11 +216,9 @@ public class ContentsFragment extends Fragment {
             FragmentManager.playing_fragment.stopPlaying();
 
         if(FragmentManager.playing_fragment!=this){
-            //start playing
             FragmentManager.playing_fragment = this;
-            /// TODO: 2019-07-28 현재 프래그먼트 재생하는 스레드 실행
-            if(contentVid.size()>0)
-                initPlayer(contentVid.get(0));
+            timer = new Timer();
+            timer.scheduleAtFixedRate(new SliderTimer(), 5000, 5000);
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
 
@@ -209,12 +226,22 @@ public class ContentsFragment extends Fragment {
 
     public void stopPlaying(){
         Log.d("now playing","stop previous playing");
-        /// TODO: 2019-07-28 현재 프래그먼트의 재생 스레드 멈춤
+        timer.cancel();
         releasePlayer();
     }
 
 
     private void initPlayer(String videoUrl) {
+        playerView.setVisibility(VISIBLE);
+        playerView.setUseController(false);
+
+        player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
+        player.setVolume(0f);
+
+        playerView.setPlayer(player);
+        player.setPlayWhenReady(playReady);
+        player.seekTo(curWindow, playBackPos);
+
         Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource);
@@ -226,6 +253,7 @@ public class ContentsFragment extends Fragment {
             curWindow = player.getCurrentWindowIndex();
             playReady = player.getPlayWhenReady();
             player.release();
+            player = null;
         }
     }
 
@@ -233,5 +261,43 @@ public class ContentsFragment extends Fragment {
         return new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory("Mozilla/5.0"))
                 .createMediaSource(uri);
+    }
+
+    private class SliderTimer extends TimerTask {
+        @Override
+        public void run() {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: Move to next fragment
+                    if (playVidIdx == contentVid.size()-1 && playImgIdx == contentImg.size()-1) {
+                        RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
+                        FeedAdapter.ViewHolder vh =
+                                (FeedAdapter.ViewHolder) rv.findViewHolderForAdapterPosition(MainActivity.lastVisibleItemPos);
+                        ViewPager vp = vh.viewPager;
+                        int curPage = vp.getCurrentItem();
+                        if (curPage < vp.getAdapter().getCount()-1) {
+                            vp.setCurrentItem(curPage+1);
+                        } else if (curPage == vp.getAdapter().getCount()-1) {
+                            vp.setCurrentItem(0);
+                        }
+                    }
+
+                    if (playVidIdx > -1 && playVidIdx < contentVid.size()-1) {
+                        playVidIdx += 1;
+                        initPlayer(contentVid.get(playVidIdx));
+                    } else if (playImgIdx > -1 && playImgIdx < contentImg.size()-1) {
+                        playImgIdx += 1;
+                        try {
+                            Glide.with(mActivity.getApplicationContext())
+                                    .load(contentImg.get(playImgIdx))
+                                    .into(view_contentRes);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
     }
 }

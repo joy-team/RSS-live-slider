@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -45,10 +48,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
+    private InputMethodManager inputMethodManager;
 
-    private int lastVisibleItemPos = -1;
+
     private int user_size;
     private int user_cnt;
+    public static int lastVisibleItemPos = -1;
 
     private Callback<Rss> rssCallback = new Callback<Rss>() {
         @Override
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             if(user_cnt==user_size){
                 //sort feedList by pubDate
                 Collections.sort(feedList,sortByPubDate);
-                Collections.reverse(feedList); 
+                Collections.reverse(feedList);
             }
 
             feedAdapter.notifyDataSetChanged();
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -98,12 +104,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                int firstVisibleItemPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-
-                if(firstVisibleItemPos != lastVisibleItemPos && firstVisibleItemPos !=-1 ){
-                    /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
-                    Log.d("now playing", "scroll changed : "+new Integer(firstVisibleItemPos).toString());
+                int firstVisibleItemPos =
+                        ((LinearLayoutManager) recyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition();
+                if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
                     FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
                     lastVisibleItemPos = firstVisibleItemPos;
                 }
@@ -136,20 +140,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void search(String keyword) {
         ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
         feedList.clear();
-        //recyclerView.removeAllViews();
-
-        //feedAdapter.notifyDataSetChanged();
-
         for (Rss rss: tmpFeedList) {
             Rss searched_rss = new Rss();
-            Log.d("Search", rss.getTitle());
             searched_rss.setTitle(rss.getTitle());
-            Log.d("Search", searched_rss.getTitle());
             searched_rss.setImgUrl(rss.getImgUrl());
             searched_rss.setLink(rss.getLink());
             searched_rss.setArticles(new ArrayList<Article>());
             for (Article article: rss.getArticles()) {
-                Log.d("Search", article.getTitle());
                 if (article.getTitle().contains(keyword)) {
                     searched_rss.getArticles().add(article);
                 }
@@ -159,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         }
         feedAdapter.notifyDataSetChanged();
-        feedAdapter.contentsAdapter.notifyDataSetChanged();
+        inputMethodManager.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
     }
 
     private final static Comparator<Rss> sortByPubDate = new Comparator<Rss>() {
