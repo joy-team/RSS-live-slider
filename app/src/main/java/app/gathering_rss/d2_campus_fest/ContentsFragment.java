@@ -174,7 +174,10 @@ public class ContentsFragment extends Fragment {
             tabView.setMinimumHeight(50);
             tabView.setMinimumWidth(50);
             try{
-                Glide.with(mActivity.getApplicationContext()).load(contentImg.get(i)).into(tabImg);
+                Glide.with(mActivity.getApplicationContext())
+                        .load(contentImg.get(i))
+                        .thumbnail(0.1f)
+                        .into(tabImg);
                 tab.setCustomView(tabView);
             }catch (Exception e){
 
