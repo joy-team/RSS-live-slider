@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ClippingMediaSource;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -128,11 +129,13 @@ public class ContentsFragment extends Fragment {
 
             if(contentVid.size()>0){
                 playVidIdx = 0;
-                initPlayer(contentVid.get(0));
+                initPlayer(contentVid.get(playVidIdx));
             }else{
                 try {
                     playImgIdx = 0;
-                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
+                    Glide.with(mActivity.getApplicationContext())
+                            .load(contentImg.get(playImgIdx))
+                            .into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -190,12 +193,18 @@ public class ContentsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 int selected = tabLayout.getSelectedTabPosition();
                 Log.d("tab_select", new Integer(selected).toString());
-                // TODO: Exception handling for video tab
-                playImgIdx = selected;
-                try {
-                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(selected)).into(view_contentRes);
-                }catch(Exception e){
-                    e.printStackTrace();
+                if (selected < contentVid.size()) {
+                    playVidIdx = selected;
+                    initPlayer(contentVid.get(playVidIdx));
+                } else {
+                    playImgIdx = selected - contentVid.size();
+                    try {
+                        Glide.with(mActivity.getApplicationContext())
+                                .load(contentImg.get(playImgIdx))
+                                .into(view_contentRes);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -247,7 +256,8 @@ public class ContentsFragment extends Fragment {
 
         Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
-        player.prepare(mediaSource);
+        ClippingMediaSource clippingSource = new ClippingMediaSource(mediaSource, 5_000_000);
+        player.prepare(clippingSource);
     }
 
     private void releasePlayer() {
