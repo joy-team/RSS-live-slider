@@ -18,11 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.material.tabs.TabLayout;
@@ -53,7 +56,7 @@ public class ContentsFragment extends Fragment {
     private String str_feed;
 
     private PlayerView playerView;
-    private SimpleExoPlayer player;
+    private SimpleExoPlayer player = null;
     private Boolean playReady = true;
     private int curWindow = 0;
     private long playBackPos = 0;
@@ -112,6 +115,17 @@ public class ContentsFragment extends Fragment {
 
             if(contentVid.size()>0){
                 playVidIdx = 0;
+                playerView.setVisibility(VISIBLE);
+                playerView.setUseController(false);
+
+                /// TODO: 2019-07-30 nullpointerexception 고치기
+                if(player == null)
+                    player = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
+                player.setVolume(0f);
+
+                playerView.setPlayer(player);
+                player.setPlayWhenReady(playReady);
+                player.seekTo(curWindow, playBackPos);
                 initPlayer(contentVid.get(0));
             }else{
                 try {
@@ -216,16 +230,6 @@ public class ContentsFragment extends Fragment {
 
 
     private void initPlayer(String videoUrl) {
-        playerView.setVisibility(VISIBLE);
-        playerView.setUseController(false);
-
-        player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
-        player.setVolume(0f);
-
-        playerView.setPlayer(player);
-        player.setPlayWhenReady(playReady);
-        player.seekTo(curWindow, playBackPos);
-
         Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource);
@@ -237,7 +241,6 @@ public class ContentsFragment extends Fragment {
             curWindow = player.getCurrentWindowIndex();
             playReady = player.getPlayWhenReady();
             player.release();
-            player = null;
         }
     }
 

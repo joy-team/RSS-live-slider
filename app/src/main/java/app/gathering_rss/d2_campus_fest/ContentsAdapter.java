@@ -4,13 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-public class ContentsAdapter extends FragmentPagerAdapter {
+public class ContentsAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private List<Article> contents;
     private int index;
@@ -27,6 +30,7 @@ public class ContentsAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         //create & add fragment for each article(content)
+        Log.d("search_func","new item");
         ContentsFragment contentsFragment = new ContentsFragment();
         Article cur_content = contents.get(position);
 
@@ -45,4 +49,8 @@ public class ContentsAdapter extends FragmentPagerAdapter {
         return contents.size();
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object item) {
+        return POSITION_NONE;
+    }
 }
