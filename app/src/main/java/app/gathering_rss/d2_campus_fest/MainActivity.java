@@ -11,6 +11,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -115,6 +117,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             search(editSearch.getText().toString());
         });
 
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = editSearch.getText().toString().toLowerCase();
+                if (text.trim().equals("")) callRss();
+            }
+        });
         callRss();
     }
 
