@@ -129,11 +129,13 @@ public class ContentsFragment extends Fragment {
 
             if(contentVid.size()>0){
                 playVidIdx = 0;
-                initPlayer(contentVid.get(0));
+                initPlayer(contentVid.get(playVidIdx));
             }else{
                 try {
                     playImgIdx = 0;
-                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
+                    Glide.with(mActivity.getApplicationContext())
+                            .load(contentImg.get(playImgIdx))
+                            .into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -191,12 +193,18 @@ public class ContentsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 int selected = tabLayout.getSelectedTabPosition();
                 Log.d("tab_select", new Integer(selected).toString());
-                // TODO: Exception handling for video tab
-                playImgIdx = selected;
-                try {
-                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(selected)).into(view_contentRes);
-                }catch(Exception e){
-                    e.printStackTrace();
+                if (selected < contentVid.size()) {
+                    playVidIdx = selected;
+                    initPlayer(contentVid.get(playVidIdx));
+                } else {
+                    playImgIdx = selected - contentVid.size();
+                    try {
+                        Glide.with(mActivity.getApplicationContext())
+                                .load(contentImg.get(playImgIdx))
+                                .into(view_contentRes);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
 
