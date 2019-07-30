@@ -196,6 +196,10 @@ public class ContentsFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int selected = tabLayout.getSelectedTabPosition();
+                for(int i=0;i<contentImg.size();i++)
+                    tabLayout.getTabAt(i).getCustomView().findViewById(R.id.tab_img).setBackgroundColor(0000000);
+                tabLayout.getTabAt(selected).getCustomView().findViewById(R.id.tab_img).setBackgroundResource(R.drawable.tab_border);
+
                 Log.d("tab_select", new Integer(selected).toString());
                 if (selected < contentVid.size()) {
                     playVidIdx = selected;
@@ -309,9 +313,17 @@ public class ContentsFragment extends Fragment {
                     }
 
                     if (playVidIdx < contentVid.size()) {
+                        for(int i=0;i<contentImg.size();i++)
+                            tabLayout.getTabAt(i).getCustomView().findViewById(R.id.tab_img).setBackgroundColor(0000000);
+                        tabLayout.getTabAt(playVidIdx).getCustomView().findViewById(R.id.tab_img).setBackgroundResource(R.drawable.tab_border);
+
                         initPlayer(contentVid.get(playVidIdx));
                         playVidIdx += 1;
                     } else if (playImgIdx < contentImg.size()) {
+                        for(int i=0;i<contentImg.size();i++)
+                            tabLayout.getTabAt(i).getCustomView().findViewById(R.id.tab_img).setBackgroundColor(0000000);
+                        tabLayout.getTabAt(playImgIdx).getCustomView().findViewById(R.id.tab_img).setBackgroundResource(R.drawable.tab_border);
+
                         try {
                             Glide.with(mActivity.getApplicationContext())
                                     .load(contentImg.get(playImgIdx))
