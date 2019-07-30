@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void search(String keyword) {
         ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
         feedList.clear();
-        recyclerView.removeAllViews();
+        //recyclerView.removeAllViews();
 
-        feedAdapter.notifyDataSetChanged();
+        //feedAdapter.notifyDataSetChanged();
 
         for (Rss rss: tmpFeedList) {
             Rss searched_rss = new Rss();

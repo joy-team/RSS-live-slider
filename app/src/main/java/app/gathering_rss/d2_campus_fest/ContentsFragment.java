@@ -105,6 +105,18 @@ public class ContentsFragment extends Fragment {
             }
 
             if(contentVid.size()>0){
+                playerView.setVisibility(VISIBLE);
+                playerView.setUseController(false);
+
+                /// TODO: 2019-07-30 nullpointerexception 고치기
+                if(player == null)
+                    player = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
+                player.setVolume(0f);
+
+                playerView.setPlayer(player);
+                player.setPlayWhenReady(playReady);
+                player.seekTo(curWindow, playBackPos);
+
                 initPlayer(contentVid.get(0));
             }else{
                 try {
@@ -204,17 +216,6 @@ public class ContentsFragment extends Fragment {
 
 
     private void initPlayer(String videoUrl) {
-        playerView.setVisibility(VISIBLE);
-        playerView.setUseController(false);
-
-        /// TODO: 2019-07-30 nullpointerexception 고치기 
-        player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
-        player.setVolume(0f);
-
-        playerView.setPlayer(player);
-        player.setPlayWhenReady(playReady);
-        player.seekTo(curWindow, playBackPos);
-
         Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource);
@@ -226,7 +227,6 @@ public class ContentsFragment extends Fragment {
             curWindow = player.getCurrentWindowIndex();
             playReady = player.getPlayWhenReady();
             player.release();
-            player = null;
         }
     }
 
