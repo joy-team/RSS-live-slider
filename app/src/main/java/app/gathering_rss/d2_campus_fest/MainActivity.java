@@ -52,9 +52,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private FeedAdapter feedAdapter;
     private InputMethodManager inputMethodManager;
 
-
-    private int user_size;
-    private int user_cnt;
     public static int lastVisibleItemPos = -1;
 
     private Callback<Rss> rssCallback = new Callback<Rss>() {
@@ -66,8 +63,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
             Rss rss = response.body();
             feedList.add(rss);
-            user_cnt++;
-            if(user_cnt==user_size){
+            if(feedList.size()==Constant.USER_CODES.length){
                 //sort feedList by pubDate
                 Collections.sort(feedList,sortByPubDate);
                 Collections.reverse(feedList);
@@ -93,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         feedAdapter =
                 new FeedAdapter(MainActivity.this, getSupportFragmentManager(), feedList);
         recyclerView.setAdapter(feedAdapter);
+
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -106,15 +106,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
             }
         });
-
-        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        user_size = Constant.USER_CODES.length;
-        user_cnt = 0;
-
-        Log.d("user_size",new Integer(user_size).toString());
 
         searchBtn.setOnClickListener((View view) -> {
             search(editSearch.getText().toString());
@@ -148,14 +139,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         editSearch.setText("");
+        FragmentManager.playing_fragment.stopPlaying();
         feedList.clear();
-        feedAdapter.notifyDataSetChanged();
         callRss();
         swipeRefreshLayout.setRefreshing(false);
     }
 
     private void callRss() {
-        user_cnt = 0;
         for (String userCode: Constant.USER_CODES) {
             Feeder feeder = new Feeder(userCode);
             Call<Rss> rssCall = feeder.callRss();

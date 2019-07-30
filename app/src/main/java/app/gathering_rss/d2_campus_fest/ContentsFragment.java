@@ -231,7 +231,6 @@ public class ContentsFragment extends Fragment {
         return view;
     }
 
-
     public void startPlaying(){
         if(FragmentManager.playing_fragment!=null && FragmentManager.playing_fragment!=this)
             //stop previous focused feed
@@ -239,11 +238,12 @@ public class ContentsFragment extends Fragment {
 
         if(FragmentManager.playing_fragment!=this){
             FragmentManager.playing_fragment = this;
+            playVidIdx = 0;
+            playImgIdx = 0;
             timer = new Timer();
             timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
-
     }
 
     public void stopPlaying(){
@@ -311,6 +311,10 @@ public class ContentsFragment extends Fragment {
                         playVidIdx = 0;
                         playImgIdx = 0;
                     }
+
+                    Log.d("Scroll", contentDate);
+                    Log.d("Scroll", "" + contentImg.size());
+                    Log.d("Scroll", "" + playImgIdx);
 
                     if (playVidIdx < contentVid.size()) {
                         initPlayer(contentVid.get(playVidIdx));

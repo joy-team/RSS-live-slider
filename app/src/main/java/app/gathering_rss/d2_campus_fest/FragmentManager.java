@@ -10,14 +10,17 @@ public class FragmentManager {
     static String playing_feed = null;
     static ContentsFragment playing_fragment = null;
 
-    static void updateFocus_ver(String str_feed){
+    static void updateFocus_ver(String str_feed) {
+        Log.d("Scroll", str_feed);
         //scroll -> focus changed
 
         playing_feed = str_feed;
 
         //start new focused feed
-        if(activeFragment.get(str_feed)!=null)
+        if(activeFragment.get(str_feed)!=null){
+            Log.d("Scroll", "start");
             activeFragment.get(str_feed).startPlaying();
+        }
     }
 
     static void updateFocus_hor(String str_feed, ContentsFragment fragment){
