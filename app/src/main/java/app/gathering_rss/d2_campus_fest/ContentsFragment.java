@@ -238,7 +238,7 @@ public class ContentsFragment extends Fragment {
         playerView.setVisibility(VISIBLE);
         playerView.setUseController(false);
 
-        player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
+        player = ExoPlayerFactory.newSimpleInstance(mActivity.getApplicationContext());
         player.setVolume(0f);
 
         playerView.setPlayer(player);
@@ -272,7 +272,6 @@ public class ContentsFragment extends Fragment {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: Move to next fragment
                     if (playVidIdx == contentVid.size()-1 && playImgIdx == contentImg.size()-1) {
                         RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
                         FeedAdapter.ViewHolder vh =
@@ -284,6 +283,11 @@ public class ContentsFragment extends Fragment {
                         } else if (curPage == vp.getAdapter().getCount()-1) {
                             vp.setCurrentItem(0);
                         }
+                        if (contentVid.size() != 0) playVidIdx = 0;
+                        else playVidIdx = -1;
+
+                        if (contentImg.size() != 0) playImgIdx = 0;
+                        else playImgIdx = -1;
                     }
 
                     if (playVidIdx > -1 && playVidIdx < contentVid.size()-1) {
