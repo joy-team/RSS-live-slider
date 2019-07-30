@@ -108,7 +108,6 @@ public class ContentsFragment extends Fragment {
                 playerView.setVisibility(VISIBLE);
                 playerView.setUseController(false);
 
-                /// TODO: 2019-07-30 nullpointerexception 고치기
                 if(player == null)
                     player = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
                 player.setVolume(0f);

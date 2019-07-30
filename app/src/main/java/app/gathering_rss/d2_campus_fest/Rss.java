@@ -75,4 +75,8 @@ public class Rss {
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
+
+    public String getLargestDate(){
+        return articles.get(0).getFormattedPubDate();
+    }
 }

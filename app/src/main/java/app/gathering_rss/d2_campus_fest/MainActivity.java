@@ -2,6 +2,7 @@ package app.gathering_rss.d2_campus_fest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +15,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.lang.reflect.Array;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private FeedAdapter feedAdapter;
 
     private int lastVisibleItemPos = -1;
+    private int user_size;
+    private int user_cnt;
 
     private Callback<Rss> rssCallback = new Callback<Rss>() {
         @Override
@@ -53,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
             Rss rss = response.body();
             feedList.add(rss);
+
+            if(user_cnt==user_size){
+                //sort feedList by pubDate
+                Collections.sort(feedList,sortByPubDate);
+                Collections.reverse(feedList); 
+            }
 
             feedAdapter.notifyDataSetChanged();
         }
@@ -73,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
+
+        user_size = Constant.USER_CODES.length;
+        user_cnt = 0;
+
+        Log.d("user_size",new Integer(user_size).toString());
 
         feedList = new ArrayList<>();
         feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
@@ -109,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void callRss() {
         for (String userCode: Constant.USER_CODES) {
+            user_cnt++;
             Feeder feeder = new Feeder(userCode);
             Call<Rss> rssCall = feeder.callRss();
             rssCall.enqueue(rssCallback);
@@ -143,4 +161,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         feedAdapter.notifyDataSetChanged();
         feedAdapter.contentsAdapter.notifyDataSetChanged();
     }
+
+    private final static Comparator<Rss> sortByPubDate = new Comparator<Rss>() {
+        @Override
+        public int compare(Rss rss1, Rss rss2) {
+            return Collator.getInstance().compare(rss1.getLargestDate(),rss2.getLargestDate());
+        }
+    };
 }
