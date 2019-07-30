@@ -296,12 +296,16 @@ public class ContentsFragment extends Fragment {
                         RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
                         FeedAdapter.ViewHolder vh =
                                 (FeedAdapter.ViewHolder) rv.findViewHolderForAdapterPosition(MainActivity.lastVisibleItemPos);
-                        ViewPager vp = vh.viewPager;
-                        int curPage = vp.getCurrentItem();
-                        if (curPage < vp.getAdapter().getCount()-1) {
-                            vp.setCurrentItem(curPage+1);
-                        } else if (curPage == vp.getAdapter().getCount()-1) {
-                            vp.setCurrentItem(0);
+                        try {
+                            ViewPager vp = vh.viewPager;
+                            int curPage = vp.getCurrentItem();
+                            if (curPage < vp.getAdapter().getCount()-1) {
+                                vp.setCurrentItem(curPage+1);
+                            } else if (curPage == vp.getAdapter().getCount()-1) {
+                                vp.setCurrentItem(0);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                         playVidIdx = 0;
