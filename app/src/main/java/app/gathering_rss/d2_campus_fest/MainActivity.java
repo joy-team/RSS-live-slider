@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        editSearch.setText("");
         feedList.clear();
         callRss();
         swipeRefreshLayout.setRefreshing(false);
