@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ClippingMediaSource;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -247,7 +248,8 @@ public class ContentsFragment extends Fragment {
 
         Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
-        player.prepare(mediaSource);
+        ClippingMediaSource clippingSource = new ClippingMediaSource(mediaSource, 5_000_000);
+        player.prepare(clippingSource);
     }
 
     private void releasePlayer() {
