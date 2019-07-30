@@ -235,7 +235,6 @@ public class ContentsFragment extends Fragment {
         return view;
     }
 
-
     public void startPlaying(){
         if(FragmentManager.playing_fragment!=null && FragmentManager.playing_fragment!=this)
             //stop previous focused feed
@@ -243,11 +242,12 @@ public class ContentsFragment extends Fragment {
 
         if(FragmentManager.playing_fragment!=this){
             FragmentManager.playing_fragment = this;
+            playVidIdx = 0;
+            playImgIdx = 0;
             timer = new Timer();
             timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
-
     }
 
     public void stopPlaying(){
@@ -300,17 +300,25 @@ public class ContentsFragment extends Fragment {
                         RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
                         FeedAdapter.ViewHolder vh =
                                 (FeedAdapter.ViewHolder) rv.findViewHolderForAdapterPosition(MainActivity.lastVisibleItemPos);
-                        ViewPager vp = vh.viewPager;
-                        int curPage = vp.getCurrentItem();
-                        if (curPage < vp.getAdapter().getCount()-1) {
-                            vp.setCurrentItem(curPage+1);
-                        } else if (curPage == vp.getAdapter().getCount()-1) {
-                            vp.setCurrentItem(0);
+                        try {
+                            ViewPager vp = vh.viewPager;
+                            int curPage = vp.getCurrentItem();
+                            if (curPage < vp.getAdapter().getCount()-1) {
+                                vp.setCurrentItem(curPage+1);
+                            } else if (curPage == vp.getAdapter().getCount()-1) {
+                                vp.setCurrentItem(0);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                         playVidIdx = 0;
                         playImgIdx = 0;
                     }
+
+                    Log.d("Scroll", contentDate);
+                    Log.d("Scroll", "" + contentImg.size());
+                    Log.d("Scroll", "" + playImgIdx);
 
                     if (playVidIdx < contentVid.size()) {
                         for(int i=0;i<contentImg.size();i++)

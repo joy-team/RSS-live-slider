@@ -67,6 +67,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         holder.view_userId.setText(userId);
         Glide.with(context).load(userImg).into(holder.view_userImg);
+
+        if (position == 1) {
+            app.gathering_rss.d2_campus_fest.FragmentManager.updateFocus_ver(feedList.get(0).toString());
+        }
     }
 
     @Override
