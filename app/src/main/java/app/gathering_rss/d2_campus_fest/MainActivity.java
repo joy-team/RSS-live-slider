@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @BindView(R.id.main_container)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.noResultLayout)
+    ConstraintLayout noResultLayout;
+
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
     private InputMethodManager inputMethodManager;
@@ -147,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        if(noResultLayout.getVisibility() == View.VISIBLE)
+            noResultLayout.setVisibility(View.GONE);
+
         editSearch.setText("");
         feedList.clear();
         feedAdapter.notifyDataSetChanged();
@@ -164,6 +170,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void search(String keyword) {
+        if(noResultLayout.getVisibility() == View.VISIBLE)
+            noResultLayout.setVisibility(View.GONE);
+
         ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
         tmpFeedList.clear();
         for (Rss rss: feedList) {
@@ -188,6 +197,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), tmpFeedList);
         recyclerView.setAdapter(feedAdapter);
         inputMethodManager.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+
+        if(tmpFeedList.size() == 0){
+            noResultLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private final static Comparator<Rss> sortByPubDate = new Comparator<Rss>() {

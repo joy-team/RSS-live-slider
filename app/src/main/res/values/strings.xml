@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">d2-campus-fest</string>
-    <string name="edit_hint">Search</string>
+    <string name="edit_hint">검색어 입력</string>
+    <string name="no_result">검색 결과가 존재하지 않습니다</string>
 </resources>
