@@ -2,6 +2,7 @@ package app.gathering_rss.d2_campus_fest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +18,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.lang.reflect.Array;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private FeedAdapter feedAdapter;
     private InputMethodManager inputMethodManager;
 
+
+    private int user_size;
+    private int user_cnt;
     public static int lastVisibleItemPos = -1;
 
     private Callback<Rss> rssCallback = new Callback<Rss>() {
@@ -57,6 +64,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
             Rss rss = response.body();
             feedList.add(rss);
+
+            if(user_cnt==user_size){
+                //sort feedList by pubDate
+                Collections.sort(feedList,sortByPubDate);
+                Collections.reverse(feedList);
+            }
 
             feedAdapter.notifyDataSetChanged();
         }
@@ -79,9 +92,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        feedList = new ArrayList<>();
-        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
-        recyclerView.setAdapter(feedAdapter);
+        user_size = Constant.USER_CODES.length;
+        user_cnt = 0;
+
+        Log.d("user_size",new Integer(user_size).toString());
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -111,7 +126,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void callRss() {
+        feedList = new ArrayList<>();
+        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
+        recyclerView.setAdapter(feedAdapter);
         for (String userCode: Constant.USER_CODES) {
+            user_cnt++;
             Feeder feeder = new Feeder(userCode);
             Call<Rss> rssCall = feeder.callRss();
             rssCall.enqueue(rssCallback);
@@ -120,8 +139,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void search(String keyword) {
         ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
-        feedList.clear();
-        for (Rss rss: tmpFeedList) {
+        tmpFeedList.clear();
+        for (Rss rss: feedList) {
             Rss searched_rss = new Rss();
             searched_rss.setTitle(rss.getTitle());
             searched_rss.setImgUrl(rss.getImgUrl());
@@ -133,10 +152,22 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
             }
             if (searched_rss.getArticles().size() != 0) {
-                feedList.add(searched_rss);
+                tmpFeedList.add(searched_rss);
             }
         }
-        feedAdapter.notifyDataSetChanged();
+
+        Collections.sort(tmpFeedList,sortByPubDate);
+        Collections.reverse(tmpFeedList);
+
+        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), tmpFeedList);
+        recyclerView.setAdapter(feedAdapter);
         inputMethodManager.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
     }
+
+    private final static Comparator<Rss> sortByPubDate = new Comparator<Rss>() {
+        @Override
+        public int compare(Rss rss1, Rss rss2) {
+            return Collator.getInstance().compare(rss1.getLargestDate(),rss2.getLargestDate());
+        }
+    };
 }
