@@ -97,9 +97,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         Log.d("user_size",new Integer(user_size).toString());
 
-        feedList = new ArrayList<>();
-        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
-        recyclerView.setAdapter(feedAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -129,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void callRss() {
+        feedList = new ArrayList<>();
+        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
+        recyclerView.setAdapter(feedAdapter);
         for (String userCode: Constant.USER_CODES) {
             user_cnt++;
             Feeder feeder = new Feeder(userCode);
@@ -139,8 +139,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void search(String keyword) {
         ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
-        feedList.clear();
-        for (Rss rss: tmpFeedList) {
+        tmpFeedList.clear();
+        for (Rss rss: feedList) {
             Rss searched_rss = new Rss();
             searched_rss.setTitle(rss.getTitle());
             searched_rss.setImgUrl(rss.getImgUrl());
@@ -152,10 +152,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
             }
             if (searched_rss.getArticles().size() != 0) {
-                feedList.add(searched_rss);
+                tmpFeedList.add(searched_rss);
             }
         }
-        feedAdapter.notifyDataSetChanged();
+
+        Collections.sort(tmpFeedList,sortByPubDate);
+        Collections.reverse(tmpFeedList);
+
+        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), tmpFeedList);
+        recyclerView.setAdapter(feedAdapter);
         inputMethodManager.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
     }
 
