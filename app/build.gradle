@@ -45,6 +45,7 @@ dependencies {
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.3'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 }
 
 repositories {

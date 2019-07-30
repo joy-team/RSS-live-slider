@@ -19,6 +19,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.lang.reflect.Array;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -51,6 +53,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @BindView(R.id.noResultLayout)
     ConstraintLayout noResultLayout;
 
+    @BindView(R.id.loadingLayout)
+    ConstraintLayout loadingLayout;
+
+    @BindView(R.id.shimmer_view_container)
+    ShimmerFrameLayout shimmerLogo;
+
     private ArrayList<Rss> feedList;
     private FeedAdapter feedAdapter;
     private InputMethodManager inputMethodManager;
@@ -75,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Collections.sort(feedList,sortByPubDate);
                 Collections.reverse(feedList);
                 feedAdapter.notifyDataSetChanged();
+
+                shimmerLogo.stopShimmer();
+                loadingLayout.setVisibility(View.GONE);
             }
         }
 
@@ -161,6 +172,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void callRss() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        shimmerLogo.startShimmer();
+
         user_cnt = 0;
         for (String userCode: Constant.USER_CODES) {
             Feeder feeder = new Feeder(userCode);
