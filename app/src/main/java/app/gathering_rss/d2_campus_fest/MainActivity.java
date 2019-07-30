@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private FeedAdapter feedAdapter;
     private InputMethodManager inputMethodManager;
 
-    private int lastVisibleItemPos = -1;
+    public static int lastVisibleItemPos = -1;
 
     private Callback<Rss> rssCallback = new Callback<Rss>() {
         @Override
@@ -88,10 +89,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 int firstVisibleItemPos =
                         ((LinearLayoutManager) recyclerView.getLayoutManager())
                         .findFirstCompletelyVisibleItemPosition();
-                Log.d("now playing", "" + firstVisibleItemPos);
                 if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
-                    /// TODO: 2019-07-28 현재 스크롤 위치에서 focus 된 게시글 자동재생
-                    Log.d("now playing", "scroll changed : " + firstVisibleItemPos);
                     FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
                     lastVisibleItemPos = firstVisibleItemPos;
                 }

@@ -81,7 +81,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     //Layout 불러오기
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // TODO: 2019-07-17 bindview 사용
         public ViewPager viewPager;
         public TextView view_userId;
