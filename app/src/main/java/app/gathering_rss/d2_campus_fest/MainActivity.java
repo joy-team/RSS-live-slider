@@ -71,9 +71,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 //sort feedList by pubDate
                 Collections.sort(feedList,sortByPubDate);
                 Collections.reverse(feedList);
+                feedAdapter =
+                        new FeedAdapter(MainActivity.this, getSupportFragmentManager(), feedList);
+                recyclerView.setAdapter(feedAdapter);
             }
-
-            feedAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -146,8 +147,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void callRss() {
         feedList = new ArrayList<>();
-        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), feedList);
-        recyclerView.setAdapter(feedAdapter);
+        user_cnt = 0;
         for (String userCode: Constant.USER_CODES) {
             user_cnt++;
             Feeder feeder = new Feeder(userCode);
