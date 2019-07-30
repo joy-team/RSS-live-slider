@@ -123,14 +123,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         feedList.clear();
         for (Rss rss: tmpFeedList) {
             Rss searched_rss = new Rss();
-            Log.d("Search", rss.getTitle());
             searched_rss.setTitle(rss.getTitle());
-            Log.d("Search", searched_rss.getTitle());
             searched_rss.setImgUrl(rss.getImgUrl());
             searched_rss.setLink(rss.getLink());
             searched_rss.setArticles(new ArrayList<Article>());
             for (Article article: rss.getArticles()) {
-                Log.d("Search", article.getTitle());
                 if (article.getTitle().contains(keyword)) {
                     searched_rss.getArticles().add(article);
                 }

@@ -1,5 +1,7 @@
 package app.gathering_rss.d2_campus_fest;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +39,8 @@ import java.util.TimerTask;
 import static android.view.View.VISIBLE;
 
 public class ContentsFragment extends Fragment {
+
+    private Activity mActivity;
 
     private String contentDate = "";
     private String contentPlace = "";
@@ -86,6 +90,15 @@ public class ContentsFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -115,22 +128,11 @@ public class ContentsFragment extends Fragment {
 
             if(contentVid.size()>0){
                 playVidIdx = 0;
-                playerView.setVisibility(VISIBLE);
-                playerView.setUseController(false);
-
-                /// TODO: 2019-07-30 nullpointerexception 고치기
-                if(player == null)
-                    player = (SimpleExoPlayer) ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
-                player.setVolume(0f);
-
-                playerView.setPlayer(player);
-                player.setPlayWhenReady(playReady);
-                player.seekTo(curWindow, playBackPos);
                 initPlayer(contentVid.get(0));
             }else{
                 try {
                     playImgIdx = 0;
-                    Glide.with(getActivity().getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
+                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(0)).into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -153,7 +155,7 @@ public class ContentsFragment extends Fragment {
             tabView.setMinimumHeight(50);
             tabView.setMinimumWidth(50);
             try{
-                Glide.with(getActivity().getApplicationContext())
+                Glide.with(mActivity.getApplicationContext())
                         .asBitmap()
                         .load(contentVid.get(i))
                         .thumbnail(0.1f)
@@ -172,7 +174,7 @@ public class ContentsFragment extends Fragment {
             tabView.setMinimumHeight(50);
             tabView.setMinimumWidth(50);
             try{
-                Glide.with(getActivity().getApplicationContext()).load(contentImg.get(i)).into(tabImg);
+                Glide.with(mActivity.getApplicationContext()).load(contentImg.get(i)).into(tabImg);
                 tab.setCustomView(tabView);
             }catch (Exception e){
 
@@ -188,7 +190,7 @@ public class ContentsFragment extends Fragment {
                 // TODO: Exception handling for video tab
                 playImgIdx = selected;
                 try {
-                    Glide.with(getActivity().getApplicationContext()).load(contentImg.get(selected)).into(view_contentRes);
+                    Glide.with(mActivity.getApplicationContext()).load(contentImg.get(selected)).into(view_contentRes);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -230,6 +232,16 @@ public class ContentsFragment extends Fragment {
 
 
     private void initPlayer(String videoUrl) {
+        playerView.setVisibility(VISIBLE);
+        playerView.setUseController(false);
+
+        player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext());
+        player.setVolume(0f);
+
+        playerView.setPlayer(player);
+        player.setPlayWhenReady(playReady);
+        player.seekTo(curWindow, playBackPos);
+
         Uri uri = Uri.parse(videoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource);
@@ -241,6 +253,7 @@ public class ContentsFragment extends Fragment {
             curWindow = player.getCurrentWindowIndex();
             playReady = player.getPlayWhenReady();
             player.release();
+            player = null;
         }
     }
 
@@ -253,12 +266,12 @@ public class ContentsFragment extends Fragment {
     private class SliderTimer extends TimerTask {
         @Override
         public void run() {
-            getActivity().runOnUiThread(new Runnable() {
+            mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     // TODO: Move to next fragment
                     if (playVidIdx == contentVid.size()-1 && playImgIdx == contentImg.size()-1) {
-                        RecyclerView rv = getActivity().findViewById(R.id.recyclerView);
+                        RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
                         FeedAdapter.ViewHolder vh =
                                 (FeedAdapter.ViewHolder) rv.findViewHolderForAdapterPosition(MainActivity.lastVisibleItemPos);
                         ViewPager vp = vh.viewPager;
@@ -276,7 +289,7 @@ public class ContentsFragment extends Fragment {
                     } else if (playImgIdx > -1 && playImgIdx < contentImg.size()-1) {
                         playImgIdx += 1;
                         try {
-                            Glide.with(getActivity().getApplicationContext())
+                            Glide.with(mActivity.getApplicationContext())
                                     .load(contentImg.get(playImgIdx))
                                     .into(view_contentRes);
                         }catch(Exception e){
