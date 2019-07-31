@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmerLogo;
 
+    private boolean isSearch = false;
     private ArrayList<Rss> feedList;
+    private ArrayList<Rss> searchResult;
     private FeedAdapter feedAdapter;
     private InputMethodManager inputMethodManager;
 
@@ -114,10 +116,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 int firstVisibleItemPos =
                         ((LinearLayoutManager) recyclerView.getLayoutManager())
                                 .findFirstCompletelyVisibleItemPosition();
-                if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
-                    FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
-                    lastVisibleItemPos = firstVisibleItemPos;
+                if (!isSearch) {
+                    if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
+                        FragmentManager.updateFocus_ver(feedList.get(firstVisibleItemPos).toString());
+                        lastVisibleItemPos = firstVisibleItemPos;
+                    }
+                } else {
+                    if(firstVisibleItemPos != -1 && firstVisibleItemPos != lastVisibleItemPos){
+                        FragmentManager.updateFocus_ver(searchResult.get(firstVisibleItemPos).toString());
+                        lastVisibleItemPos = firstVisibleItemPos;
+                    }
                 }
+
             }
         });
 
@@ -140,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void afterTextChanged(Editable editable) {
                 String text = editSearch.getText().toString().toLowerCase();
                 if (text.trim().equals("")) {
+                    isSearch = false;
                     feedAdapter = new
                             FeedAdapter(MainActivity.this, getSupportFragmentManager(), feedList);
                     recyclerView.setAdapter(feedAdapter);
@@ -154,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void onRefresh() {
         if(noResultLayout.getVisibility() == View.VISIBLE)
             noResultLayout.setVisibility(View.GONE);
-
+        isSearch = false;
         editSearch.setText("");
         FragmentManager.playing_fragment.stopPlaying();
         feedList.clear();
@@ -173,11 +184,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void search(String keyword) {
+        isSearch = true;
         if(noResultLayout.getVisibility() == View.VISIBLE)
             noResultLayout.setVisibility(View.GONE);
 
-        ArrayList<Rss> tmpFeedList = (ArrayList) feedList.clone();
-        tmpFeedList.clear();
+        searchResult = (ArrayList) feedList.clone();
+        searchResult.clear();
         for (Rss rss: feedList) {
             Rss searched_rss = new Rss();
             searched_rss.setTitle(rss.getTitle());
@@ -190,18 +202,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
             }
             if (searched_rss.getArticles().size() != 0) {
-                tmpFeedList.add(searched_rss);
+                searchResult.add(searched_rss);
             }
         }
 
-        Collections.sort(tmpFeedList,sortByPubDate);
-        Collections.reverse(tmpFeedList);
+        Collections.sort(searchResult,sortByPubDate);
+        Collections.reverse(searchResult);
 
-        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), tmpFeedList);
+        feedAdapter = new FeedAdapter(this,getSupportFragmentManager(), searchResult);
         recyclerView.setAdapter(feedAdapter);
         inputMethodManager.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
 
-        if(tmpFeedList.size() == 0){
+        if(searchResult.size() == 0){
             noResultLayout.setVisibility(View.VISIBLE);
         }
     }
