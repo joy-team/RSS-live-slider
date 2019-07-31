@@ -1,6 +1,6 @@
 # Live Slider for Instagram Feed :star:
 
-여기에 설명
+본 프로젝트는 관심 사용자의 RSS를 제공받아 Instagram 게시글을 한눈에 확인할 수 있도록 피드해주는 어플리케이션입니다.
 
 ## RSS 컨텐츠
 
