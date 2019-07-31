@@ -24,6 +24,11 @@ Instagram의 RSS는 `http://fetchrss.com` 를 통해 생성하여 사용하였�
 
 ## 구현 사항
 ### - 슬라이더 자동 재생
+
+사용자의 화면에 나타나고 있는 피드를 자동으로 재생합니다. 5초 간격으로 사진/동영상이 보여지며 한 게시글의 컨텐츠가 모두 재생되면 다음 게시글로 넘어갑니다. 마지막 게시글까지 모두 재생된 후에는 다시 첫번째 게시글로 돌아옵니다.
+
+재생 중인 컨텐츠는 하단 tab의 하얀 테두리를 통해 표시되며 tab을 통해 재생할 컨텐츠를 선택할 수 도 있습니다.
+
 <div>
 <center>
 <img src="https://user-images.githubusercontent.com/37107066/62205027-71c44f80-b3c9-11e9-9d9c-22bdd0f975eb.gif" width="40%" height="40%">
@@ -32,6 +37,9 @@ Instagram의 RSS는 `http://fetchrss.com` 를 통해 생성하여 사용하였�
 </div>
 
 ### - 검색
+
+해당 키워드를 포함한 게시글의 피드를 보여 줍니다.
+
 <div>
 <center>
 <img src="https://user-images.githubusercontent.com/37107066/62205030-725ce600-b3c9-11e9-9990-93199dd2eac9.gif" width="40%" height="40%">
@@ -39,6 +47,9 @@ Instagram의 RSS는 `http://fetchrss.com` 를 통해 생성하여 사용하였�
 </div>
 
 ### - 새로고침
+
+스와이프를 통해 새로고침이 가능하며 새로고침을 통해 피드를 업데이트할 수 있습니다. 검색 결과 창에서 새로고침 할 경우 본래의 피드 목록으로 돌아옵니다.
+
 <div>
 <center>
 <img src="https://user-images.githubusercontent.com/37107066/62205029-71c44f80-b3c9-11e9-8a77-99713e81868e.gif" width="40%" height="40%">
