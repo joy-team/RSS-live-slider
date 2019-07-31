@@ -9,6 +9,7 @@ public class FragmentManager {
     static HashMap<String, ContentsFragment> activeFragment = new HashMap<>();
     static String playing_feed = null;
     static ContentsFragment playing_fragment = null;
+    static boolean hasFocus = true;
 
     static void updateFocus_ver(String str_feed) {
         Log.d("Scroll", str_feed);
