@@ -150,10 +150,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void afterTextChanged(Editable editable) {
                 String text = editSearch.getText().toString().toLowerCase();
                 if (text.trim().equals("")) {
+                    Log.d("Scroll", "empty");
                     isSearch = false;
-                    feedAdapter = new
-                            FeedAdapter(MainActivity.this, getSupportFragmentManager(), feedList);
-                    recyclerView.setAdapter(feedAdapter);
+                    FragmentManager.playing_fragment.stopPlaying();
+                    FragmentManager.hasFocus = false;
+                    feedList.clear();
+                    callRss();
                 }
             }
         });
@@ -165,11 +167,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void onRefresh() {
         if(noResultLayout.getVisibility() == View.VISIBLE)
             noResultLayout.setVisibility(View.GONE);
-        isSearch = false;
         editSearch.setText("");
-        FragmentManager.playing_fragment.stopPlaying();
-        feedList.clear();
-        callRss();
         swipeRefreshLayout.setRefreshing(false);
     }
 

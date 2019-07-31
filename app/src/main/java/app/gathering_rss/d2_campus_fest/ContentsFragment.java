@@ -84,10 +84,10 @@ public class ContentsFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
-            FragmentManager.updateFocus_hor(str_feed, this);
-        }else{
-
+        if (getView() != null) {
+            if(isVisibleToUser){
+                FragmentManager.updateFocus_hor(str_feed, this);
+            }
         }
     }
 
@@ -136,6 +136,7 @@ public class ContentsFragment extends Fragment {
             }
 
             if(contentVid.size()>0){
+                playVidIdx = 0;
                 try {
                     Glide.with(mActivity.getApplicationContext())
                             .load(contentImg.get(playVidIdx))
@@ -157,6 +158,7 @@ public class ContentsFragment extends Fragment {
                     e.printStackTrace();
                 }
             }else{
+                playImgIdx = 0;
                 try {
                     Glide.with(mActivity.getApplicationContext())
                             .load(contentImg.get(playImgIdx))
@@ -207,6 +209,7 @@ public class ContentsFragment extends Fragment {
             }
             tabLayout.addTab(tab);
         }
+
         for(int i=0;i<contentImg.size();i++){
             TabLayout.Tab tab = tabLayout.newTab();
 
@@ -266,7 +269,34 @@ public class ContentsFragment extends Fragment {
 
             }
         });
+
+        Log.d("Scroll", "create");
+
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("Scroll", "pause");
+        if (FragmentManager.playing_fragment == this) {
+            Log.d("Scroll", "pause & stop");
+            FragmentManager.playing_fragment.stopPlaying();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Scroll", "resume: " + FragmentManager.playing_fragment);
+        if (!FragmentManager.hasFocus) {
+            Log.d("Scroll", "focus");
+            FragmentManager.updateFocus_ver(str_feed);
+            FragmentManager.hasFocus = true;
+        } else if (FragmentManager.playing_fragment == this) {
+            Log.d("Scroll", "resume & start");
+            FragmentManager.playing_fragment.startPlaying();
+        }
     }
 
     public void startPlaying(){
@@ -278,15 +308,17 @@ public class ContentsFragment extends Fragment {
             FragmentManager.playing_fragment = this;
             playVidIdx = 0;
             playImgIdx = 0;
-            timer = new Timer();
-            timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
+
+        if (timer != null) timer.cancel();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
     }
 
     public void stopPlaying(){
         Log.d("now playing","stop previous playing");
-        timer.cancel();
+        if (timer != null) timer.cancel();
         releasePlayer();
     }
 
@@ -330,6 +362,12 @@ public class ContentsFragment extends Fragment {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("Scroll", contentDate);
+                    Log.d("Scroll", "" + contentVid.size());
+                    Log.d("Scroll", "" + playVidIdx);
+                    Log.d("Scroll", "" + contentImg.size());
+                    Log.d("Scroll", "" + playImgIdx);
+
                     if (playVidIdx == contentVid.size() && playImgIdx == contentImg.size()) {
                         RecyclerView rv = mActivity.findViewById(R.id.recyclerView);
                         FeedAdapter.ViewHolder vh =
@@ -340,19 +378,16 @@ public class ContentsFragment extends Fragment {
                             if (curPage < vp.getAdapter().getCount()-1) {
                                 vp.setCurrentItem(curPage+1);
                             } else if (curPage == vp.getAdapter().getCount()-1) {
+                                FragmentManager.hasFocus = false;
                                 vp.setCurrentItem(0);
+                                return;
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                         playVidIdx = 0;
                         playImgIdx = 0;
                     }
-
-                    Log.d("Scroll", contentDate);
-                    Log.d("Scroll", "" + contentImg.size());
-                    Log.d("Scroll", "" + playImgIdx);
 
                     if (playVidIdx < contentVid.size()) {
                         for(int i=0;i<contentImg.size();i++)
