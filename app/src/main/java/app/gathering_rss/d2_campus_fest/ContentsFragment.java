@@ -378,19 +378,16 @@ public class ContentsFragment extends Fragment {
                             if (curPage < vp.getAdapter().getCount()-1) {
                                 vp.setCurrentItem(curPage+1);
                             } else if (curPage == vp.getAdapter().getCount()-1) {
+                                FragmentManager.hasFocus = false;
                                 vp.setCurrentItem(0);
+                                return;
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                         playVidIdx = 0;
                         playImgIdx = 0;
                     }
-
-                    Log.d("Scroll", contentDate);
-                    Log.d("Scroll", "" + contentImg.size());
-                    Log.d("Scroll", "" + playImgIdx);
 
                     if (playVidIdx < contentVid.size()) {
                         for(int i=0;i<contentImg.size();i++)
