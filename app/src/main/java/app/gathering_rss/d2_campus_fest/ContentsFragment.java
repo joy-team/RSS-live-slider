@@ -269,6 +269,24 @@ public class ContentsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("Scroll", "pause");
+        if (FragmentManager.playing_fragment != null) {
+            FragmentManager.playing_fragment.stopPlaying();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Scroll", "resume");
+        if (FragmentManager.playing_fragment != null) {
+            FragmentManager.playing_fragment.startPlaying();
+        }
+    }
+
     public void startPlaying(){
         if(FragmentManager.playing_fragment!=null && FragmentManager.playing_fragment!=this)
             //stop previous focused feed
@@ -278,15 +296,17 @@ public class ContentsFragment extends Fragment {
             FragmentManager.playing_fragment = this;
             playVidIdx = 0;
             playImgIdx = 0;
-            timer = new Timer();
-            timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
             Log.d("now playing","feed : "+str_feed+" fragment : "+this.toString()+" / date : "+contentDate);
         }
+
+        if (timer != null) timer.cancel();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new SliderTimer(), 0, 5000);
     }
 
     public void stopPlaying(){
         Log.d("now playing","stop previous playing");
-        timer.cancel();
+        if (timer != null) timer.cancel();
         releasePlayer();
     }
 
