@@ -273,7 +273,8 @@ public class ContentsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("Scroll", "pause");
-        if (FragmentManager.playing_fragment != null) {
+        if (FragmentManager.playing_fragment == this) {
+            Log.d("Scroll", "pause & stop");
             FragmentManager.playing_fragment.stopPlaying();
         }
     }
@@ -282,7 +283,8 @@ public class ContentsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("Scroll", "resume");
-        if (FragmentManager.playing_fragment != null) {
+        if (FragmentManager.playing_fragment == this) {
+            Log.d("Scroll", "resume & start");
             FragmentManager.playing_fragment.startPlaying();
         }
     }
